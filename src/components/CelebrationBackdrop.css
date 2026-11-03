@@ -1,0 +1,31 @@
+.celebration-backdrop { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.ambient-orb { position: absolute; border-radius: 50%; filter: blur(65px); opacity: .5; }
+.orb-left { width: 360px; height: 430px; background: #e5d6f2; left: -170px; top: 24%; }
+.orb-right { width: 350px; height: 420px; background: #f3dce8; right: -130px; bottom: 0; }
+.orbit { position: absolute; width: 1000px; height: 1000px; border: 1px solid #d9cbe328; border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.orbit-two { width: 1260px; height: 1260px; }
+.balloon-group { position: absolute; width: 140px; height: 390px; animation: balloon-float 7s ease-in-out infinite; }
+.balloon { position: relative; width: 140px; height: 173px; border-radius: 49% 51% 47% 48% / 44% 44% 56% 56%; background: radial-gradient(ellipse at 29% 22%, #fff9 0%, #ffffff30 19%, transparent 45%), radial-gradient(ellipse at 35% 30%, #e7d9f6 20%, #c5acdf 75%, #ad8bc9 100%); box-shadow: inset -8px -5px 20px #926bb125, inset 2px 1px 5px #fff8; }
+.balloon::after { content: ''; position: absolute; bottom: -7px; left: calc(50% - 5px); width: 10px; height: 10px; background: #c7aedb; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.balloon-string { position: absolute; width: 64px; height: 208px; top: 177px; left: 38px; stroke: #bca8c680; stroke-width: 1; }
+.far-left { left: -35px; top: 21%; --tilt: -14deg; animation-delay: -3s; }
+.pink.left { left: 10%; top: 55%; width: 105px; --tilt: 12deg; animation-delay: -1s; }
+.pink .balloon { width: 105px; height: 131px; background: radial-gradient(ellipse at 29% 22%, #fffb, #ffffff30 20%, transparent 45%), radial-gradient(ellipse at 35% 30%, #f7e1ea 20%, #e7bcd2 75%, #d8a4bf 100%); }
+.pink .balloon::after { background: #e3b8cd; }
+.pink .balloon-string { top: 135px; left: 21px; }
+.cream.right { right: 12%; top: 17%; width: 99px; --tilt: 14deg; animation-delay: -4s; }
+.cream .balloon { width: 99px; height: 123px; background: radial-gradient(ellipse at 29% 22%, #fffc, #ffffff30 20%, transparent 45%), radial-gradient(ellipse at 35% 30%, #faf1e3 20%, #ebd5c4 80%, #d6b9ad); }
+.cream .balloon::after { background: #e5cebf; }
+.cream .balloon-string { top: 127px; left: 18px; }
+.far-right { right: -28px; top: 51%; --tilt: 16deg; animation-delay: -2s; }
+.confetti { position: absolute; width: 5px; height: 11px; border-radius: 1px; background: #c8b2da; opacity: .5; animation: confetti-drift 8s ease-in-out infinite; animation-delay: var(--delay); transform: rotate(var(--rotation)); }
+.confetti-1 { background: #e6b7cc; width: 4px; height: 8px; }
+.confetti-2 { border: 1px solid #c5a1d4; background: transparent; width: 5px; height: 5px; border-radius: 50%; }
+.confetti-3 { background: #dbc4a6; width: 3px; height: 7px; }
+.floating-spark { position: absolute; color: #bd9aca; animation: sparkle 5s ease-in-out infinite; }
+.spark-left { left: 23%; top: 28%; font-size: 36px; }
+.spark-right { right: 23%; top: 69%; font-size: 24px; animation-delay: -2s; color: #d3afba; }
+@keyframes balloon-float { 0%, 100% { transform: translateY(0) rotate(var(--tilt)); } 50% { transform: translateY(-20px) rotate(calc(var(--tilt) + 4deg)); } }
+@keyframes confetti-drift { 0%, 100% { transform: translateY(0) rotate(var(--rotation)); } 50% { transform: translate(8px, -16px) rotate(calc(var(--rotation) + 35deg)); } }
+@keyframes sparkle { 0%, 100% { opacity: .35; transform: scale(.85); } 50% { opacity: .9; transform: scale(1.1); } }
+@media (max-width: 800px) { .pink.left, .cream.right, .floating-spark { display: none; } .far-left { left: -90px; } .far-right { right: -95px; } }

@@ -1,16 +1,35 @@
-# React + Vite
+# A Little Birthday Magic
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A desktop-first birthday surprise for November 20, built with React, Vite, and modular CSS. Frontend only; no backend, database, tracking, or external media requests.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```sh
+npm install
+npm run dev
+```
 
-## React Compiler
+Open the local URL printed by Vite. Production checks and preview:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```sh
+npm run lint
+npm run build
+npm run preview
+```
 
-## Expanding the ESLint configuration
+## Phase 1
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Full-screen pastel welcome with CSS balloons, sparkles, confetti, and an envelope illustration.
+- **Open Your Surprise** transitions to a clearly labeled PIN challenge placeholder. **Back to the beginning** returns to the welcome screen.
+- Reusable experience shell, journey progress, animation pause/resume, keyboard focus handling, and reduced-motion support.
+- No PIN logic, private content, or final gift is included.
+
+## Customization and structure
+
+Edit `src/config/birthdayContent.js` for the recipient placeholder, date label, screen copy, and planned journey. Empty media and quiz fields are reserved for later phases. `[Your name]` is intentionally a placeholder.
+
+`src/components/` contains the welcome screen, next-stage placeholder, shared shell, and decorative backdrop, with adjacent CSS. `src/index.css` holds base typography and tokens; `src/App.css` holds the application background. `src/App.jsx` owns the current flow state. The flow resets on reload.
+
+The remaining journey follows `AGENTS.md`: PIN, photo puzzle, personal quiz, two-page photo flipbook, cassette player, envelope letter, gift machine, present opening, and closing celebration. Implement these one phase at a time; the progress dots are indicators, not links to unfinished screens.
+
+This repository is public. Do not commit private photos, audio, personal messages, PINs, or gift details without explicit direction. A future client-side PIN is a game mechanic, not security.

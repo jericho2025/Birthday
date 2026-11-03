@@ -1,4 +1,5 @@
-import { useEffect, useReducer, useRef } from 'react'
+import { SecretScratchCard } from './SecretScratchCard'
+import { useEffect, useReducer, useRef, useState } from 'react'
 import { initialQuizState, isValidQuiz, quizOptionForKey, reduceQuiz } from './quizState'
 import './Screens.css'
 import './BirthdayQuiz.css'
@@ -8,7 +9,8 @@ const celebrationPieces = Array.from({ length: 24 }, (_, index) => ({
   left: `${(index * 37 + 7) % 100}%`, delay: `${(index % 6) * 0.06}s`, rotation: `${index * 47}deg`,
 }))
 
-export function BirthdayQuiz({ content, questions, headingRef, onComplete, onBack, onReaction }) {
+export function BirthdayQuiz({ content, questions, headingRef, onComplete, onBack, onReaction, surprises, scratchRevealed, onScratchReveal }) {
+  const [scratchOpen, setScratchOpen] = useState(false)
   const [quiz, dispatch] = useReducer((state, action) => reduceQuiz(state, action, questions), initialQuizState)
   const questionHeadingRef = useRef(null)
   const previousView = useRef('0')
@@ -61,6 +63,7 @@ export function BirthdayQuiz({ content, questions, headingRef, onComplete, onBac
                 <p className="quiz-counter">{content.completionLabel}</p>
                 <h2 className="quiz-question quiz-completion-title" ref={questionHeadingRef} tabIndex={-1}>{content.completionTitle}<em>{content.completionAccent}</em></h2>
                 <p className="quiz-completion-message">{content.completionMessage}</p>
+                {surprises.scratch.enabled && <button className="text-button scratch-trigger" onClick={() => setScratchOpen(true)}>{surprises.scratch.action}</button>}
                 <button className="primary-button" onClick={() => onComplete(quiz.answers)}>{content.continueAction}<span aria-hidden="true">→</span></button>
               </div>
             ) : (
@@ -90,6 +93,7 @@ export function BirthdayQuiz({ content, questions, headingRef, onComplete, onBac
           </div>
         )}
       </div>
+      {quiz.complete && scratchOpen && <SecretScratchCard content={surprises.scratch} closeAction={surprises.closeAction} revealed={scratchRevealed} onReveal={onScratchReveal} onClose={() => setScratchOpen(false)} onContinue={() => onComplete(quiz.answers)} />}
     </section>
   )
 }

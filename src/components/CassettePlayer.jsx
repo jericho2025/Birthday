@@ -1,14 +1,19 @@
-import { useEffect, useReducer, useRef } from 'react'
+import { birthdaySurprises } from '../config/birthdaySurprises'
+import { cassetteTrack } from './surpriseState'
+import { useEffect, useReducer, useRef, useState } from 'react'
 import { connectCassetteAudio } from './cassetteAudio.js'
 import { createCassetteState, formatAudioTime, isCassetteComplete, reduceCassette } from './cassetteState.js'
 import './Screens.css'
 import './CassettePlayer.css'
 
-export function CassettePlayer({ content, headingRef, onComplete, onBack }) {
+export function CassettePlayer({ content: originalContent, headingRef, onComplete, onBack }) {
+  const [side, setSide] = useState('A')
+  const content = cassetteTrack(originalContent, birthdaySurprises.cassette, side)
   const [player, dispatch] = useReducer(reduceCassette, content, createCassetteState)
   const audioRef = useRef(null)
   const controllerRef = useRef(null)
-  const { audioSrc, initialVolume, startMuted } = content
+  const audioSettings = useRef({ initialVolume: content.initialVolume, startMuted: content.startMuted })
+  const { audioSrc } = content
   const playing = player.status === 'playing'
   const pending = ['starting', 'buffering'].includes(player.status)
   const hasSource = Boolean(audioSrc)
@@ -18,10 +23,10 @@ export function CassettePlayer({ content, headingRef, onComplete, onBack }) {
   const complete = isCassetteComplete(player)
 
   useEffect(() => {
-    const controller = connectCassetteAudio(audioRef.current, { audioSrc, initialVolume, startMuted }, dispatch)
+    const controller = connectCassetteAudio(audioRef.current, { audioSrc, ...audioSettings.current }, dispatch)
     controllerRef.current = controller
     return () => { controller.dispose(); controllerRef.current = null }
-  }, [audioSrc, initialVolume, startMuted])
+  }, [audioSrc, side])
 
   return (
     <section className={`screen cassette-screen${playing ? ' is-playing' : ''}`} aria-labelledby="cassette-title">
@@ -29,13 +34,14 @@ export function CassettePlayer({ content, headingRef, onComplete, onBack }) {
       <audio ref={audioRef} preload="metadata" aria-hidden="true" />
       <div className="cassette-layout">
         <div className="cassette-display">
-          <div className="cassette-tape" role="img" aria-label={`Pastel cassette: ${content.tapeLabel}`}>
+          <div key={side} className="cassette-tape cassette-side-flip" role="img" aria-label={`Pastel cassette: ${content.tapeLabel}`}>
             {['top-left', 'top-right', 'bottom-left', 'bottom-right'].map((corner) => <span key={corner} className={`tape-screw screw-${corner}`} aria-hidden="true" />)}
             <div className="tape-label"><div className="tape-label-top"><span>{content.sideLabel}</span><small>{content.formatLabel}</small></div><p className="tape-song-title">{content.songTitle}</p><p className="tape-artist">{content.artist}</p><span className="tape-label-rule" /></div>
             <div className="tape-window" aria-hidden="true"><span className="tape-ribbon" />{['left', 'right'].map((side) => <div key={side} className={`reel-well reel-${side}`}><span className="reel-tape" /><span className="cassette-reel"><i /></span></div>)}<span className="window-lines" /></div>
             <span className="tape-custom-label">{content.tapeLabel}</span>
             <div className="cassette-bottom" aria-hidden="true"><i /><span /><i /></div>
           </div>
+          {birthdaySurprises.cassette.enabled && <button className="text-button cassette-flip" onClick={() => { audioSettings.current = { initialVolume: player.volume, startMuted: player.muted }; controllerRef.current?.restart(); controllerRef.current?.pause(); setSide((value) => value === 'A' ? 'B' : 'A') }}>{birthdaySurprises.cassette.flipAction}<span aria-hidden="true"> &#8635;</span></button>}
           <button className="cassette-inspect" aria-expanded={player.inspectionOpen} aria-controls="cassette-note" onClick={() => dispatch({ type: 'inspect' })}><span aria-hidden="true">{player.inspectionOpen ? '−' : '+'}</span>{player.inspectionOpen ? content.closeInspectionAction : content.inspectAction}</button>
           <div id="cassette-note" className="cassette-note" hidden={!player.inspectionOpen}><span aria-hidden="true">♡</span><h2>{content.inspectionTitle}</h2><p>{content.message}</p></div>
         </div>

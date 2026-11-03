@@ -26,13 +26,16 @@ import { createGiftRevealState, giftRevealNextStage, reduceGiftReveal } from './
 import { clearBirthdayProgress, initialJourneyProgress, loadJourneyProgress, saveJourneyProgress } from './components/journeyProgress'
 import { changeJourneyStage, journeyPresentation, revisitChapter } from './components/journeyPresentation'
 import { useLoveCompanion } from './components/useLoveCompanion'
+import { birthdaySurprises } from './config/birthdaySurprises'
+import { emptySurprises, loadSurprises, reduceSurprises, saveSurprises, SURPRISE_KEY } from './components/surpriseState'
+import './BirthdaySurprises.css'
 import './App.css'
 import './CreativePolish.css'
 
 export default function App() {
   const [adventure, setAdventure] = useState(0)
   const restart = useCallback(() => {
-    try { clearBirthdayProgress(window.sessionStorage) } catch { /* Storage is optional. */ }
+    try { clearBirthdayProgress(window.sessionStorage); window.sessionStorage.removeItem(SURPRISE_KEY) } catch { /* Storage is optional. */ }
     setAdventure((current) => current + 1)
   }, [])
   return <BirthdayAdventure key={adventure} freshSession={adventure > 0} onRestart={restart} />
@@ -46,6 +49,13 @@ function BirthdayAdventure({ freshSession, onRestart }) {
   const [journey, setJourney] = useState({ stage: restored.stage, unlockedThrough: restored.unlockedThrough })
   const { stage, unlockedThrough } = journey
   const setStage = useCallback((update) => setJourney((current) => changeJourneyStage(current, update)), [])
+  const [surprises, surpriseDispatch] = useReducer(reduceSurprises, undefined, () => {
+    if (freshSession) return emptySurprises()
+    try { return loadSurprises(window.sessionStorage) } catch { return emptySurprises() }
+  })
+  const revealScratch = useCallback(() => surpriseDispatch('scratch'), [])
+  const seeVerification = useCallback(() => surpriseDispatch('verification'), [])
+  useEffect(() => { try { saveSurprises(window.sessionStorage, surprises) } catch { /* Optional storage. */ } }, [surprises])
   const [motionPaused, setMotionPaused] = useState(restored.motionPaused)
   const headingRef = useRef(null)
   const previousStage = useRef(null)
@@ -124,7 +134,7 @@ function BirthdayAdventure({ freshSession, onRestart }) {
         ) : stage === 'puzzle' ? (
           <TilePuzzle key="puzzle" content={birthdayContent.puzzle} headingRef={headingRef} onReaction={companion.reportReaction} onComplete={completePuzzle} onBack={() => setStage('welcome')} />
         ) : stage === 'quiz' ? (
-          <BirthdayQuiz key="quiz" content={birthdayContent.quiz} questions={birthdayContent.quizQuestions} headingRef={headingRef} onReaction={companion.reportReaction} onComplete={completeQuiz} onBack={() => setStage('welcome')} />
+          <BirthdayQuiz surprises={birthdaySurprises} scratchRevealed={surprises.scratchRevealed} onScratchReveal={revealScratch} key="quiz" content={birthdayContent.quiz} questions={birthdayContent.quizQuestions} headingRef={headingRef} onReaction={companion.reportReaction} onComplete={completeQuiz} onBack={() => setStage('welcome')} />
         ) : stage === 'album' ? (
           <BirthdayFlipbook key="album" content={birthdayContent.book} headingRef={headingRef} motionPaused={motionPaused} onComplete={completeBook} onBack={() => setStage('welcome')} />
         ) : stage === 'cassette' ? (
@@ -132,7 +142,7 @@ function BirthdayAdventure({ freshSession, onRestart }) {
         ) : stage === 'letter' ? (
           <BirthdayLetter key="letter" content={birthdayContent.letter} headingRef={headingRef} motionPaused={motionPaused} onComplete={completeLetter} onBack={() => setStage('welcome')} />
         ) : stage === 'machine' ? (
-          <GiftSlotMachine key="machine" content={birthdayContent.machine} state={machine} dispatch={machineDispatch} headingRef={headingRef} motionPaused={motionPaused} onReaction={companion.reportReaction} onComplete={completeMachine} onBack={() => setStage('welcome')} />
+          <GiftSlotMachine verificationSeen={surprises.verificationSeen} onVerificationSeen={seeVerification} key="machine" content={birthdayContent.machine} state={machine} dispatch={machineDispatch} headingRef={headingRef} motionPaused={motionPaused} onReaction={companion.reportReaction} onComplete={completeMachine} onBack={() => setStage('welcome')} />
         ) : stage === 'reveal' && machineComplete ? (
           <GiftReveal key="reveal" content={birthdayContent.gift} state={gift} dispatch={giftDispatch} headingRef={headingRef} motionPaused={motionPaused} onComplete={completeGift} onBack={() => setStage('machine')} />
         ) : stage === 'closing' && canAccessFinale(machine, gift, birthdayContent.machine) ? (

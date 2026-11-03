@@ -1,7 +1,7 @@
 import { useId } from 'react'
 
 // A code-native illustration: no generated or remote birthday/product photography.
-export function BirthdayCake({ label }) {
+export function BirthdayCake({ label, extinguished = [false, false, false] }) {
   const id = useId()
   return <svg className="finale-cake-illustration" viewBox="0 0 400 320" role="img" aria-label={label}>
     <defs>
@@ -27,7 +27,8 @@ export function BirthdayCake({ label }) {
         <rect x={x - 4} y={i === 1 ? 56 : 65} width="8" height={i === 1 ? 54 : 43} rx="3" fill={i === 1 ? '#d8c0e3' : '#ecc2d4'} stroke="#c7a6b9" />
         <path d={`M${x - 3} 88l6-5m-6 18 6-5`} stroke="#fffc" strokeWidth="2" />
         <path d={`M${x} ${i === 1 ? 56 : 65}v-5`} stroke="#a48c6b" />
-        <g className="finale-flame"><ellipse cx={x} cy={i === 1 ? 43 : 52} rx="22" ry="27" fill={`url(#${id}-glow)`} /><path d={`M${x} ${i === 1 ? 30 : 39}c-12 15-8 24 0 24s12-9 0-24`} fill="#e9c27f" /><ellipse cx={x} cy={i === 1 ? 48 : 57} rx="3" ry="6" fill="#fff6cd" /></g>
+        <g className={`finale-flame${extinguished[i] ? ' is-out' : ''}`}><ellipse cx={x} cy={i === 1 ? 43 : 52} rx="22" ry="27" fill={`url(#${id}-glow)`} /><path d={`M${x} ${i === 1 ? 30 : 39}c-12 15-8 24 0 24s12-9 0-24`} fill="#e9c27f" /><ellipse cx={x} cy={i === 1 ? 48 : 57} rx="3" ry="6" fill="#fff6cd" /></g>
+        {extinguished[i] && <path className="candle-smoke" d={`M${x} ${i === 1 ? 48 : 57}c-14-13 13-18 0-34`} fill="none" stroke="#b7a8be" strokeWidth="2" />}
       </g>)}
     </g>
     <g fill="#e4b7cd" stroke="#c99db8">

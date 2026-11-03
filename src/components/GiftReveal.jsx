@@ -1,3 +1,6 @@
+import { birthdaySurprises } from '../config/birthdaySurprises'
+import { SurpriseDialog } from './SurpriseDialog'
+import { canShowCertificate } from './surpriseState'
 import { useEffect, useRef, useState } from 'react'
 import { isGiftOpened, isGiftRevealComplete } from './giftRevealState.js'
 import { useReducedMotion } from './useReducedMotion'
@@ -17,6 +20,8 @@ function GiftPhoto({ photo }) {
 }
 
 export function GiftReveal({ content, state, dispatch, headingRef, motionPaused, onComplete, onBack }) {
+  const [certificateOpen, setCertificateOpen] = useState(false)
+  const certificate = birthdaySurprises.certificate
   const reducedMotion = useReducedMotion()
   const reduced = motionPaused || reducedMotion
   const opened = isGiftOpened(state)
@@ -55,9 +60,11 @@ export function GiftReveal({ content, state, dispatch, headingRef, motionPaused,
       <div className="gift-presentation-photo"><GiftPhoto photo={content.photo} /><span className="gift-photo-caption">{content.giftName}</span></div>
       <div className="gift-presentation-copy"><p className="gift-small-label">WITH LOVE, FOR YOU</p><h2 id="gift-reveal-title">{content.revealTitle}</h2><p>{content.message}</p>
         {!claimed ? <button className="primary-button" onClick={() => dispatch({ type: 'claim' })}>{content.claimAction}<span aria-hidden="true">♡</span></button> : <div className="gift-claim-confirmation" ref={confirmationRef} tabIndex={-1} role="status"><h3>{content.confirmationTitle}</h3><p>{content.confirmation}</p></div>}
+    {certificate.enabled && canShowCertificate(state) && <button className="text-button certificate-trigger" onClick={() => setCertificateOpen(true)}>{certificate.action}</button>}
       </div>
       <div className="gift-reveal-particles" aria-hidden="true">{Array.from({ length: 20 }, (_, i) => <i key={i} style={{ '--i': i }} />)}</div>
     </div>}
+    {certificateOpen && canShowCertificate(state) && <SurpriseDialog className="certificate-dialog" title={certificate.title} closeAction={birthdaySurprises.closeAction} onClose={() => setCertificateOpen(false)}><p className="certificate-copy">{certificate.message}</p><p>{certificate.note}</p></SurpriseDialog>}
     <footer className="gift-journey-actions"><button className="text-button" onClick={onBack}><span aria-hidden="true">←</span>{content.backAction}</button>{claimed && <button className="primary-button" onClick={() => onComplete(state)}>{content.continueAction}<span aria-hidden="true">→</span></button>}</footer>
   </section>
 }

@@ -1,6 +1,10 @@
+import { birthdaySurprises } from '../config/birthdaySurprises'
+import { SurpriseDialog } from './SurpriseDialog'
 import { useState } from 'react'
 
-export function BookPhotoPage({ page, number, side, visible }) {
+export function BookPhotoPage({ page, number, side, visible, busy }) {
+  const [noteOpen, setNoteOpen] = useState(false)
+  const note = birthdaySurprises.book.notes[page.id]
   const [failedSource, setFailedSource] = useState(null)
   const hasImage = page.imageSrc && failedSource !== page.imageSrc
   return (
@@ -14,6 +18,8 @@ export function BookPhotoPage({ page, number, side, visible }) {
         {page.caption && <p className="book-caption">{page.caption}</p>}
         {page.message && <p className="book-message">{page.message}</p>}
       </div>
+      {note && <button className="book-secret-note" disabled={!visible || busy} tabIndex={visible && !busy ? 0 : -1} aria-label={birthdaySurprises.book.action} onPointerDown={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()} onClick={(event) => { event.stopPropagation(); setNoteOpen(true) }}>&#9825;</button>}
+      {noteOpen && visible && !busy && <SurpriseDialog title={birthdaySurprises.book.title} closeAction={birthdaySurprises.closeAction} onClose={() => setNoteOpen(false)}><p className="secret-note-copy">{note}</p></SurpriseDialog>}
       <span className="book-page-number">{String(number).padStart(2, '0')}</span>
     </article>
   )

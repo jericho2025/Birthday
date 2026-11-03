@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { birthdaySurprises } from '../config/birthdaySurprises'
+import { LoveVerification } from './LoveVerification'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { MachineReel } from './MachineReel'
 import { isGiftMachineComplete, isMachineSpinKey, isValidMachineConfig, MACHINE_SPINS } from './giftMachineState.js'
 import { useReducedMotion } from './useReducedMotion'
@@ -8,7 +10,8 @@ import './GiftSlotMachine.css'
 
 const confetti = Array.from({ length: 32 }, (_, index) => ({ left: `${(index * 37 + 3) % 100}%`, delay: `${(index % 5) * 0.04}s`, drift: `${(index * 29) % 140 - 70}px`, rotate: `${index * 47}deg` }))
 
-export function GiftSlotMachine({ content, state, dispatch, headingRef, motionPaused, onComplete, onBack, onReaction }) {
+export function GiftSlotMachine({ content, state, dispatch, headingRef, motionPaused, onComplete, onBack, onReaction, verificationSeen, onVerificationSeen }) {
+  const [showVerification] = useState(birthdaySurprises.verification.enabled && !verificationSeen && state.finishedSpins === 0)
   const reducedMotion = useReducedMotion()
   const reduced = reducedMotion || motionPaused
   const { muted, toggleMute, begin, stopSpin, stopCue, winCue } = useMachineSound(content.settings)
@@ -58,16 +61,17 @@ export function GiftSlotMachine({ content, state, dispatch, headingRef, motionPa
   }
 
   return (
-    <section className={`screen gift-machine phase-${state.phase}`} aria-labelledby="machine-title" style={{ '--celebration-duration': `${content.settings.celebrationMs}ms` }} onKeyDown={(event) => {
+    <section className={`screen gift-machine phase-${state.phase}${spinning && state.finishedSpins === 2 ? ' final-spin' : ''}`} aria-labelledby="machine-title" style={{ '--celebration-duration': `${content.settings.celebrationMs}ms` }} onKeyDown={(event) => {
       if (isMachineSpinKey(event)) { event.preventDefault(); spin() }
       if ((event.key === 'Enter' || event.key === ' ') && event.repeat) event.preventDefault()
     }}>
+      {showVerification && <LoveVerification content={birthdaySurprises.verification} onSeen={onVerificationSeen} motionPaused={motionPaused} />}
       <header className="machine-heading"><p className="eyebrow">{content.eyebrow}</p><h1 id="machine-title" ref={headingRef} tabIndex={-1}>{content.title}</h1><p>{content.subtitle}</p></header>
       <div className="machine-layout">
         <div className="machine-stage">
           <div className="machine-body" aria-busy={spinning || celebrating}>
             <div className="machine-bow" aria-hidden="true"><i /><i /><span /></div>
-            <div className="machine-marquee"><span aria-hidden="true">✧</span>{content.marquee}<span aria-hidden="true">✧</span></div>
+            <div className="machine-marquee"><span aria-hidden="true">✧</span>{celebrating || complete ? birthdaySurprises.jackpot.label : spinning && state.finishedSpins === 2 ? birthdaySurprises.jackpot.suspense : content.marquee}<span aria-hidden="true">✧</span></div>
             <div className="machine-reel-frame">
               <div className="machine-bulbs" aria-hidden="true">{Array.from({ length: 16 }, (_, index) => <i key={index} />)}</div>
               <div className="machine-reels">{configured && [0, 1, 2].map((index) => <MachineReel key={index} config={content} state={state} index={index} reduced={reduced} onStopped={onStopped} />)}</div>

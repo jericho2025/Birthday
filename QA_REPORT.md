@@ -98,4 +98,79 @@ Earlier Phase 11 files remain in the uncommitted working tree and were preserved
 - The existing chapter-boundary recovery policy remains: unfinished activities restart within their chapter. Earned tracker access and heart progress persist; this is not per-tile, per-question or per-page persistence.
 - Little Love’s preference/history storage is optional. When blocked, the companion and journey still work in memory. Confirmed restart clears journey progress and reaction history while retaining mute/dismiss choices.
 - Supplied personal media/copy still need their own content QA. Mobile, cross-browser behavior and audible sound quality were not assessed in this desktop pass.
-- Batch 2 additions remain out of scope. The current project is ready for a separately authorized Batch 2 task.
+- This records the completed Batch 1 scope. The separately authorized Batch 2 implementation is recorded below.
+
+## Creative Enhancement Batch 2 — completed November 3, 2026
+
+Baseline: clean working tree, all **132** original tests passing. Read the project instructions, README, existing QA records and source before editing. No commit, push, dependency installation, personal-content replacement or external service was added. SHA-256 comparison confirmed all six pre-existing content configuration files are byte-for-byte unchanged, including the Welcome recipient, PIN, quiz, photo slots, song, letter, watch and finale placeholders.
+
+### Implemented scope
+
+1. Optional quiz-completion scratch card with canvas mouse/touch pointers, keyboard reveal, immediate continue, bounded coverage tracking, cancellation cleanup, and a once-only reward.
+2. Stable-page-ID book notes, heart stickers, native top-layer stationery dialogs, Escape handling and focus return. Invisible/busy page triggers are disabled. Notes do not affect page visitation or completion.
+3. Configurable cassette sides. Side A inherits the existing song; Side B is an honest missing-recording placeholder until supplied. Source disposal, position reset, mute/volume preservation, media errors, inspection completion and no-autoplay behavior are retained.
+4. Short fictional Love Verification, immediately skippable and remembered when first presented. No spin/progress changes or active timers are persisted.
+5. Third-spin gold lighting, suspense marquee and jackpot presentation using the existing staggered easing, three scripted results, timing, guarded synthesized audio and restrained confetti. No additional waiting, spin or audio layer.
+6. Optional cream/blush/gold romantic keepsake, available only through the existing valid opened-and-claimed gift state. It has no commercial or redemption behavior and never gates the finale.
+7. Individually accessible cake candles, fading flames/subtle smoke, a completion wish, and replay resetting the local candle state. Global pause and reduced motion remove moving effects without blocking interaction.
+
+All new copy and placeholder track configuration live in `src/config/birthdaySurprises.js`. Optional milestone storage uses `birthday-surprises-v1`; no strokes, open dialogs, candles, playback, timers or animation transactions are saved. Confirmed restart removes the optional progress key; cancellation leaves it intact. Existing journey/machine guards and chapter-boundary restoration are unchanged.
+
+### Problems found and fixed
+
+- Placing the keepsake action in its own row caused gift-screen vertical overflow. Moved it into the existing gift details column.
+- Adding wish text below the original full-size cake pushed the finale footer beyond the viewport. Sized the cake/wish area together and reserved stable text space at both desktop heights.
+- Original sticker placement shared the caption area. Moved stickers into the photo area, outside the page-turn edge targets; browser geometry checks confirm captions are unobstructed.
+- Candle targets initially overlapped at the smaller cake size. Narrowed the individual targets and checked their bounds, mouse activation and visible keyboard focus.
+- Reopening a revealed scratch card could replay its reward animation. Separated persistent reveal state from the local newly-earned animation flag.
+- Unbounded pointer samples could accumulate during prolonged scratching. Coverage now retains at most 240 distinct grid cells.
+- Side B initially inherited the song-specific missing-media status. It now uses its independently configured recording title.
+
+During validation, corrected test-harness selectors and a reload race by waiting for Chrome's page-load event. These were automation issues, not application failures.
+
+### Validation results
+
+| Check | Actual result |
+| --- | --- |
+| `node --test tests/*.test.js` | **142 passed, 0 failed**: original 132 plus 10 targeted regressions |
+| `npm run lint` | Passed, no errors or warnings |
+| `npm run build` | Passed |
+| `git diff --check` | Passed; only Windows line-ending notices |
+| Original content hashes | All six existing configuration files unchanged |
+| Chrome 1440×900, normal motion | Full ten-chapter journey, optional discoveries, controls, dialogs and layout passed |
+| Chrome 1366×768, normal motion | Full journey and discoveries passed; no horizontal/vertical overflow or clipped controls |
+| Chrome 1366×768, reduced motion | Full journey, immediate animation settlement, optional interactions, replay and restart passed |
+| Chrome 1366×768, animations paused | Full journey, optional interactions, replay and restart passed |
+| Runtime/console monitoring | No unexpected errors in successful journey runs |
+
+Additional Chrome regression coverage:
+
+- Physical PIN/quiz keyboard input and retries; native HTML puzzle dragging, swaps and restart.
+- Native forward/reverse book dragging, short-drag cancellation, Escape interruption, opening/closing, arrow keys, sound toggles and refresh during page turns.
+- Native letter dragging/cancellation, replay and interruption recovery.
+- Rapid machine/lever activation; ordered reel stops; refresh mid-spin/celebration; exactly two near misses then a jackpot; sound toggles; no fourth spin or premature gift/finale.
+- Gift-box interruption/refresh, opening/claim guards, keepsake availability and dismissal, return visits without re-unwrapping.
+- Scratch keyboard reveal and actual mouse rubbing; cancellation while the pointer is captured; reopen/repeated-event suppression; continuing without the optional card.
+- Native book-note mouse activation, Escape, focus restoration, twelve photo slots and no caption collision.
+- Actual `HTMLAudioElement` playback using a temporary in-memory silent WAV: both React cassette sides, pause/reset on switching, retained mute/volume, no simultaneous playback and no autoplay after refresh. Separate adapter checks cover seeking, restart, media errors, retry and disposal. No fixture media/configuration was written to production files.
+- Candle keyboard and native mouse activation, nonoverlapping hit targets, reduced-motion smoke suppression, idempotent completion and replay reset.
+- Back navigation, earned chapter revisits, per-chapter reloads, stable heart/tracker progress, restart cancellation/confirmation, preservation of unrelated storage, and a complete journey/restart with a throwing `sessionStorage` getter.
+
+`tests/browserSurprises.mjs` provides a reusable dependency-free Chrome regression runner for both sizes and motion modes. Additional detailed regression, media and storage scripts/screenshots remain in ignored `qa.local/`. Chrome used an isolated headless profile under `node_modules/.cache/`; screenshots were visually inspected as well as checked geometrically.
+
+### Changed files
+
+| Purpose | Files |
+| --- | --- |
+| New content and styling | `src/config/birthdaySurprises.js`, `src/BirthdaySurprises.css` |
+| New optional components/helpers | `src/components/SecretScratchCard.jsx`, `SurpriseDialog.jsx`, `LoveVerification.jsx`, `WishCake.jsx`, `surpriseState.js` |
+| Chapter integration | `src/App.jsx`, `src/components/BirthdayQuiz.jsx`, `BirthdayFlipbook.jsx`, `BookPhotoPage.jsx`, `CassettePlayer.jsx`, `GiftSlotMachine.jsx`, `GiftReveal.jsx`, `FinalBirthdayCelebration.jsx`, `BirthdayCake.jsx` |
+| Regression coverage | `tests/surpriseState.test.js`, `tests/cassetteAudio.test.js`, `tests/browserSurprises.mjs` |
+| Documentation | `README.md`, `QA_REPORT.md` |
+
+### Remaining limitations
+
+- Personal photos, actual song/recording, quiz, letter, watch image and final copy remain placeholders, as requested. Supplied media, long personalized copy and audible sound quality need the later personalization QA pass.
+- This pass used headless desktop Chrome at the requested sizes. Mobile, touch hardware, other browsers and screen-reader output were not assessed.
+- Refresh retains earned chapter access, not partially completed chapter interactions. Optional candles/dialogs reset on remount; fully revealed scratch rewards and verification suppression persist when session storage is available.
+- Printing/downloading a certificate was optional and is intentionally omitted. No required Batch 2 feature is deferred, and no remaining application defect was observed in the tested scenarios.

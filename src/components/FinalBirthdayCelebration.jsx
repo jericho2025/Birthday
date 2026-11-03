@@ -1,5 +1,6 @@
 import { useEffect, useReducer, useRef } from 'react'
-import { BirthdayCake } from './BirthdayCake'
+import { WishCake } from './WishCake'
+import { birthdaySurprises } from '../config/birthdaySurprises'
 import { createFinaleState, finaleStepDelay, reduceFinale, scheduleFinaleStep } from './finaleState.js'
 import { useReducedMotion } from './useReducedMotion'
 import './Screens.css'
@@ -67,7 +68,7 @@ export function FinalBirthdayCelebration({ content, headingRef, motionPaused, on
       <FinaleAtmosphere />
       <header className="finale-heading"><p className="eyebrow">{content.eyebrow}</p><h1 id="finale-title" ref={headingRef} tabIndex={-1}>{content.title}{' '}<em>{content.recipient}</em></h1><p className="finale-subtitle">{content.subtitle}</p></header>
       <div className="finale-keepsake">
-        <figure className="finale-cake-scene" aria-hidden={!cakeVisible}><BirthdayCake label={content.cakeLabel} /><figcaption>{content.cakeNote}</figcaption></figure>
+        <WishCake label={content.cakeLabel} content={birthdaySurprises.wish} visible={cakeVisible} note={content.cakeNote} />
         <article className="finale-card" aria-labelledby="finale-card-title" aria-hidden={!messageVisible} tabIndex={messageVisible ? 0 : -1}>
           <span className="finale-card-flower" aria-hidden="true">✳</span><p className="finale-placeholder-label">{content.card.label}</p><h2 id="finale-card-title">{content.card.heading}</h2>
           <div className="finale-card-message"><p>{content.card.greeting}</p>{content.card.paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}<p className="finale-signature">{content.card.signature}</p></div>

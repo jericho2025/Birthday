@@ -141,6 +141,32 @@ Edit `src/config/birthdayExperience.js` for companion copy, expressions, quiet c
 
 **Quiet Little Love’s reactions** mutes the reactions; **Dismiss Little Love** replaces the mascot with an accessible restore button. These preferences and a bounded set of already-seen event identifiers are stored in `birthday-little-love-v1` when session storage is available. Message text, entered digits, selected answers, active bubbles and timers are not stored. Refresh retains suppression/preferences. A confirmed adventure restart clears reaction history while respecting the mute/dismiss choices; the existing journey and machine progress keys are cleared as before. Blocked storage leaves all features usable in memory.
 
-Run all regression tests with `node --test tests/*.test.js`. Batch 1 adds `companionState.test.js` and `journeyPresentation.test.js` for suppression, dismissal, repeated events, cleanup, earned navigation, tracker states, heart derivation, refresh and restart. See the Batch 1 section in `QA_REPORT.md` for current checks. Batch 2 features remain unimplemented.
+Run all regression tests with `node --test tests/*.test.js`. Batch 1 adds `companionState.test.js` and `journeyPresentation.test.js` for suppression, dismissal, repeated events, cleanup, earned navigation, tracker states, heart derivation, refresh and restart. See `QA_REPORT.md` for the Batch 1 and Batch 2 validation records.
 
 This repository is public. Do not commit private photos, audio, personal messages, PINs, or gift details without explicit direction. The client-side PIN is a game mechanic, not security.
+
+## Batch 2 optional discoveries
+
+The ten chapters and their completion rules are unchanged. These discoveries never earn chapter access or require additional activity to continue:
+
+- **Secret Scratch Card:** the completed quiz offers a pastel canvas card. Scratch with a mouse/touch pointer, use **Reveal Surprise**, or continue directly to the book. Closing an unfinished card discards the foil strokes; a fully revealed reward remains revealed for the session.
+- **Hidden book notes:** heart stickers on selected photo pages open stationery notes. Escape or the close button returns focus to the sticker. All twelve photo slots, page turns, drag controls and existing captions remain intact.
+- **Cassette Side B:** **Flip Cassette** switches between the existing song and an optional recording. A missing recording shows an honest placeholder. Switching disposes the previous audio controller, resets position, preserves volume/mute, and never starts playback automatically. The existing inspect-or-play completion rule is unchanged.
+- **Love Verification:** a clearly fictional, short machine introduction. **Skip / Continue** is available immediately; the intro is marked seen when presented so refresh/revisits do not replay it. It never changes spins or progress.
+- **Third-spin presentation:** gold lighting and a suspense marquee accompany the existing staggered reels. The original two near misses, guaranteed third jackpot, durations, synthesized sound guards and confetti are preserved.
+- **Gift keepsake:** an optional stationery certificate appears only after the gift has been opened and claimed. It is a romantic souvenir, with no commercial or redemption functionality.
+- **Make a wish:** each finale candle is an optional keyboard/mouse button. Extinguishing all three reveals a wish; replay resets the candles without resetting the adventure. Reduced motion and paused animation omit smoke/moving effects while preserving interaction.
+
+Edit **`src/config/birthdaySurprises.js`** for all new copy, visibility switches, note-to-page-ID mappings, track sources/titles/descriptions, verification labels and wish text. Removing a note's page-ID entry removes that sticker. Side A fields set to `null` inherit the existing cassette configuration; Side B's source is empty until a local recording is supplied (for example `/audio/voice-message.mp3` under `public/audio/`). No recording or music is bundled. Original configuration files and personal placeholders are preserved.
+
+Only the completed scratch reveal and seen verification flag are saved in `birthday-surprises-v1`. Active strokes, dialogs, candles, audio, timers and animations are never persisted. A confirmed restart removes this key along with existing journey/machine checkpoints; cancellation preserves progress. Storage failure falls back to memory. Refresh retains earned chapters and follows the existing safe chapter-boundary recovery policy.
+
+Validation commands:
+
+```sh
+node --test tests/*.test.js
+npm run lint
+npm run build
+```
+
+`tests/browserSurprises.mjs` is an optional dependency-free Chrome DevTools regression runner. Start Vite at `http://127.0.0.1:5173`, launch an isolated Chrome profile with remote debugging on port `9222`, then run `node tests/browserSurprises.mjs`. It clears progress **in that test browser session**, runs both desktop sizes plus reduced-motion/paused journeys, and writes screenshots to ignored `qa.local/`. Use a separate browser profile, not an in-progress personal session. No browser automation packages are required.

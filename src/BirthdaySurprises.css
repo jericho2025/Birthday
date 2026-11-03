@@ -1,0 +1,56 @@
+.surprise-dialog { box-sizing: border-box; width: min(580px, calc(100vw - 64px)); max-height: calc(100dvh - 64px); overflow: auto; border: 1px solid #d9c4cb; border-radius: 25px; padding: 30px 38px; color: #70586f; text-align: center; background: linear-gradient(145deg, #fffdf5, #fff3f6 65%, #f4edfb); box-shadow: 0 24px 100px #59405e30, inset 0 0 0 7px #fff8; }
+.surprise-dialog::backdrop { background: #46364f55; backdrop-filter: blur(7px); }
+.surprise-dialog h2 { font: italic 30px var(--serif); margin: 8px 0 16px; color: #775674; }
+.surprise-dialog p { font-size: 14px; line-height: 1.8; }
+.surprise-seal { display: block; color: #bc809e; font: 38px var(--serif); }
+.surprise-actions { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; }
+.surprise-close { display: block; margin: 18px auto 0; }
+.scratch-card { position: relative; display: grid; place-items: center; height: 180px; border: 1px solid #d4bc94; border-radius: 15px; overflow: hidden; margin: 22px 0 0; background: #fffaf0; }
+.scratch-card p { margin: 0; max-width: 310px; padding: 12px; font: italic 23px/1.6 var(--serif); }
+.scratch-card canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+.scratch-card.scratch-reward { animation: surprise-reveal 650ms ease-out both; }
+.scratch-status { min-height: 25px; }
+.scratch-trigger { display: block; margin: 0 auto 14px; }
+.book-secret-note { position: absolute; z-index: 5; top: 12%; left: 58%; width: 35px; height: 35px; border: 1px solid #cdaab8; border-radius: 45% 45% 40% 40%; background: #f5dbe6; color: #a3648a; font-size: 22px; transform: rotate(-10deg); box-shadow: 0 3px 6px #8b617220; cursor: pointer; }
+.book-secret-note:disabled { visibility: hidden; }
+.surprise-dialog .secret-note-copy, .surprise-dialog .certificate-copy { font: italic 25px/1.7 var(--serif); }
+.cassette-flip { display: inline-block; margin: 12px 18px 0 0; }
+.cassette-side-flip { animation: cassette-side-arrive 500ms ease-out; }
+.verification-steps { list-style: none; padding: 8px 0; text-align: left; }
+.verification-steps li { display: flex; gap: 16px; margin: 16px 0; opacity: .45; transition: opacity 250ms; font-size: 14px; }
+.verification-steps li.checked { opacity: 1; }
+.verification-steps span { color: #b27494; }
+.final-spin .machine-body { box-shadow: 0 0 55px #e0b66d65, 0 25px 55px #ad84ad30; }
+.final-spin .machine-marquee { background: linear-gradient(100deg, #fff3d3, #fbe6ee, #fff3d3); }
+.final-spin .machine-bulbs i { animation: jackpot-light 700ms ease-in-out infinite alternate; }
+.phase-celebrating .machine-marquee { text-shadow: 0 0 16px #cfab6d; color: #8f684a; }
+.certificate-trigger { display: block; margin: 10px auto 0; }
+.certificate-dialog { border-radius: 8px; border-color: #cbb48d; background: linear-gradient(125deg, #fffaf0, #fff4f7); outline: 1px solid #cbb48d; outline-offset: -13px; }
+.wish-cake { position: relative; width: 280px; margin-inline: auto; }
+.wish-cake .finale-cake-illustration { height: 224px; }
+.candle-control { position: absolute; top: 8%; width: 24px; height: 44px; transform: translateX(-50%); border: 1px solid transparent; border-radius: 20px; color: transparent; background: transparent; cursor: pointer; }
+.candle-0 { left: 40%; }
+.candle-1 { left: 50%; top: 5%; }
+.candle-2 { left: 60%; }
+.candle-control:hover, .candle-control:focus-visible { color: #a67f97; background: #fff5; border-color: #ba94aa; }
+.candle-control:focus-visible, .book-secret-note:focus-visible { outline: 3px solid #a88cbe; outline-offset: 3px; }
+.finale-flame.is-out { opacity: 0; transition: opacity 300ms; animation: none; }
+.candle-smoke { animation: candle-smoke 1100ms ease-out both; }
+.wish-message { min-height: 45px; max-width: 345px; margin: 8px auto 0; font: italic 13px/1.6 var(--serif); color: #8d6c84; }
+.wish-complete .wish-message { animation: surprise-reveal 800ms ease-out both; }
+@keyframes surprise-reveal { from { opacity: .5; filter: brightness(1.2); } to { opacity: 1; filter: none; } }
+@keyframes cassette-side-arrive { from { transform: perspective(900px) rotateY(-28deg) rotate(-2deg); opacity: .6; } to { transform: perspective(900px) rotateY(0) rotate(-2deg); opacity: 1; } }
+@keyframes jackpot-light { to { filter: brightness(1.5); box-shadow: 0 0 12px #eccf8b; } }
+@keyframes candle-smoke { from { opacity: .6; transform: translateY(0); } to { opacity: 0; transform: translateY(-18px); } }
+.motion-paused :is(.scratch-card, .cassette-side-flip, .candle-smoke, .wish-message, .machine-bulbs i), .finale-still .candle-smoke { animation: none; }
+.motion-paused :is(.verification-steps li, .finale-flame) { transition: none; }
+.motion-paused .candle-smoke, .finale-still .candle-smoke { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .scratch-card, .cassette-side-flip, .candle-smoke, .wish-message, .machine-bulbs i { animation: none !important; }
+  .verification-steps li, .finale-flame { transition: none; }
+  .candle-smoke { opacity: 0; }
+}
+@media (max-height: 820px) {
+  .wish-cake { width: 240px; }
+  .wish-cake .finale-cake-illustration { height: 192px; }
+}

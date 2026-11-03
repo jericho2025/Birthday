@@ -116,7 +116,7 @@ export function BirthdayFlipbook({ content, headingRef, motionPaused, onComplete
               <div className="book-hardback hardback-right" aria-hidden="true" />
               <div className="book-paper-stack stack-left" aria-hidden="true" />
               <div className="book-paper-stack stack-right" aria-hidden="true" />
-              <div className="book-last-page"><BookPhotoPage page={pages[pages.length - 1]} number={pages.length} side="right" visible={visiblePage(pages.length)} /></div>
+              <div className="book-last-page"><BookPhotoPage busy={busy} page={pages[pages.length - 1]} number={pages.length} side="right" visible={visiblePage(pages.length)} /></div>
               <div className="book-spine" aria-hidden="true"><span>{content.spineTitle}</span></div>
               <div ref={coverRef} className={`book-leaf book-front-cover${coverMoving ? ' is-moving' : ''}`} style={{ transform: coverTransform, zIndex: coverMoving || !book.opened ? 50 : 1 }}>
                 <div className="book-face book-face-front cover-outside" aria-hidden={book.opened}>
@@ -130,7 +130,7 @@ export function BirthdayFlipbook({ content, headingRef, motionPaused, onComplete
                     <span className="cover-flower" aria-hidden="true">✳</span>
                   </button>
                 </div>
-                <div className="book-face book-face-back"><BookPhotoPage page={pages[0]} number={1} side="left" visible={visiblePage(1)} /></div>
+                <div className="book-face book-face-back"><BookPhotoPage busy={busy} page={pages[0]} number={1} side="left" visible={visiblePage(1)} /></div>
               </div>
               {Array.from({ length: pages.length / 2 - 1 }, (_, index) => {
                 const moving = index === movingLeaf
@@ -138,8 +138,8 @@ export function BirthdayFlipbook({ content, headingRef, motionPaused, onComplete
                 const transform = moving ? leafTransform(motion.progress, motion.direction === 'previous') : leafTransform(turned ? 1 : 0)
                 return (
                   <div key={pages[index * 2 + 1].id} ref={(node) => { if (node) leavesRef.current.set(index, node); else leavesRef.current.delete(index) }} className={`book-leaf${moving ? ' is-moving' : ''}`} style={{ transform, zIndex: moving ? 40 : turned ? 10 + index : 30 - index }}>
-                    <div className="book-face book-face-front"><BookPhotoPage page={pages[index * 2 + 1]} number={index * 2 + 2} side="right" visible={visiblePage(index * 2 + 2)} /></div>
-                    <div className="book-face book-face-back"><BookPhotoPage page={pages[index * 2 + 2]} number={index * 2 + 3} side="left" visible={visiblePage(index * 2 + 3)} /></div>
+                    <div className="book-face book-face-front"><BookPhotoPage busy={busy} page={pages[index * 2 + 1]} number={index * 2 + 2} side="right" visible={visiblePage(index * 2 + 2)} /></div>
+                    <div className="book-face book-face-back"><BookPhotoPage busy={busy} page={pages[index * 2 + 2]} number={index * 2 + 3} side="left" visible={visiblePage(index * 2 + 3)} /></div>
                   </div>
                 )
               })}

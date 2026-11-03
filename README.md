@@ -1,25 +1,16 @@
-# Birthday ✨
+# React + Vite
 
-A personalized, interactive birthday surprise website.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Direction
-- Desktop-first web experience (mobile layout will be handled later).
-- Frontend-only: React + Vite, no database or backend.
-- Smooth pastel purple / pink visuals, polished transitions and playful interactive moments.
-- Local static image/audio assets with placeholders until the final personal content is provided.
-- Develop in small, testable stages.
+Currently, two official plugins are available:
 
-## Planned experience
-1. Birthday welcome and introduction
-2. Secret PIN challenge
-3. Picture puzzle
-4. Personalized quiz
-5. Realistic 3D photo flipbook (a picture on every page)
-6. Retro music cassette and letter reveal
-7. Three-spin virtual gift machine
-8. Mystery gift-box reveal and final celebration
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Development
-This repository is initialized for iterative work with Codex. See `AGENTS.md` for scope and implementation guidelines.
+## React Compiler
 
-No personal photos, private details, or real gift spoilers should be committed until the repository's visibility is reviewed.
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

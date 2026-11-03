@@ -17,9 +17,9 @@ npm run build
 npm run preview
 ```
 
-PIN, puzzle, quiz, book, and cassette regression checks: `node --test tests/*.test.js`.
+PIN, puzzle, quiz, book, cassette, and letter regression checks: `node --test tests/*.test.js`.
 
-## Phases 1–6
+## Phases 1–7
 
 - Full-screen pastel welcome with CSS balloons, sparkles, confetti, and an envelope illustration.
 - **Open Your Surprise** starts the Secret PIN Challenge. Use the clickable keypad or physical number keys; Backspace/Delete removes a digit and Escape clears the attempt. Four digits automatically validate.
@@ -36,7 +36,9 @@ PIN, puzzle, quiz, book, and cassette regression checks: `node --test tests/*.te
 - Paper-flip audio starts muted. **Enable page sounds** opts into a quiet, locally synthesized paper rustle on subsequent user-initiated turns. **Mute page sounds** stops playback. A local recording can replace the generated sound. Paused animations and reduced-motion preferences settle turns immediately; neither blocks navigation or completion.
 - The cassette has native-audio-backed Play/Pause, Restart, Mute/Unmute, volume, a seek slider, and elapsed/duration displays. Its reels spin only after the native `playing` event, stop during buffering/pause/end/error, and honor the global animation pause and reduced-motion preference. No song is bundled and playback never autostarts.
 - With no configured audio, **Add your song here** is shown and playback controls are disabled. **Inspect Cassette** opens an editable note and unlocks Continue, keeping the journey completable during development. With audio present, an intentional Play that reaches actual playback also unlocks Continue; listening to the whole track is unnecessary. Loading errors offer Retry audio and leave inspection available.
-- Progress dots remain noninteractive. The puzzle requires a successful PIN; the quiz requires puzzle completion and Continue; the album requires all five correct quiz answers and Continue; the cassette requires book completion and Continue; the Birthday Letter placeholder requires cassette inspection or successful intentional playback and Continue. No later chapter or final gift is implemented. Reload or **Back to the beginning** starts the journey again.
+- The Birthday Letter starts inside a sealed pastel envelope. Click the seal/envelope or **Open Envelope** to animate the 3D flap and raise the paper edge. Then click the paper, drag it upward, or use **Read Letter** to take out the stationery. Merely opening the envelope does not unlock Continue.
+- Short or cancelled paper drags return to the offered paper edge. **Close Letter** tucks the paper back and seals the envelope. **Replay** closes and reopens it to the paper edge, ready to pull out again. Once the paper has fully displayed, completion is retained across Close/Replay; Continue locks during animation or dragging.
+- Progress dots remain noninteractive. The puzzle requires a successful PIN; the quiz requires puzzle completion and Continue; the album requires all five correct quiz answers and Continue; the cassette requires book completion and Continue; the letter requires cassette inspection or successful intentional playback and Continue; the Virtual Gift Machine placeholder requires opening and displaying the letter and Continue. No later chapter or final gift is implemented. Reload or **Back to the beginning** starts the journey again.
 
 ## Customization and structure
 
@@ -74,6 +76,16 @@ Use Tab and Enter/Space for buttons and the native arrow-key behavior of the ran
 
 Cassette tests use a fake media element to cover absent audio, real-event-driven display state, retries, bounds, play rejection, progression, stale promises, and cleanup. Desktop browser checks can use a temporary generated test tone; no test song or tone is bundled in the site.
 
-The remaining journey follows `AGENTS.md`: envelope letter, gift machine, present opening, and closing celebration. Implement these one phase at a time; the progress dots are indicators, not links to unfinished screens.
+## Birthday letter personalization and interaction
+
+Edit `birthdayContent.letter` in `src/config/birthdayContent.js`. The stationery has separate `heading`, `greeting`, `paragraphs` (an array of text strings), `closing`, and `signature` fields. `recipient` customizes the envelope address; `title` and `titleAccent` customize the stage heading. All personal text is explicitly labeled as placeholders. No real memories, message, or gift details are included. Keep private content out of this public repository unless explicitly authorized.
+
+The letter supports mouse clicks and pointer dragging, plus Tab and Enter/Space for every control. Escape cancels an active drag or closes an offered/displayed letter. Keyboard focus moves to the paper edge when it appears and to the readable stationery when extraction finishes. The stationery is scrollable for longer messages and smaller laptop viewports; its contents are hidden from assistive technology until fully displayed. Button controls offer the same progression as dragging.
+
+`BirthdayLetter.jsx` renders layered envelope folds, a rotating two-sided flap, a heart wax seal, and physical stationery; `BirthdayLetter.css` provides paper texture, depth, shadows, and handwritten-style local fonts. `letterState.js` tracks opening, paper rising, dragging/cancellation, lifting/presentation, reading, and closing/replay. Each timed phase has a revision ID so stale callbacks and rapid clicks cannot skip animation stages or unlock Continue. Completion requires both the opened-envelope flag and a fully displayed letter. No dependency was added.
+
+Letter `settings.durations` (milliseconds), `dragDistancePx`, and `dragCommitThreshold` (0–1) control timing and pull sensitivity. Reduced-motion preferences and **Pause animations** settle timed phases immediately while preserving the separate intentional paper-pull step. Timers are cleared on phase changes or leaving the screen. The automated letter tests cover opening, closing, replay, drag cancellation, bounds, stale events, completion, and placeholder configuration.
+
+The remaining journey follows `AGENTS.md`: gift machine, present opening, and closing celebration. Implement these one phase at a time; the progress dots are indicators, not links to unfinished screens.
 
 This repository is public. Do not commit private photos, audio, personal messages, PINs, or gift details without explicit direction. The client-side PIN is a game mechanic, not security.

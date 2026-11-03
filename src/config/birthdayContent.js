@@ -1,4 +1,5 @@
 import { birthdayBook } from './birthdayBook.js'
+import { birthdayMachine } from './birthdayMachine.js'
 
 // Public-safe content only. Keep private media, messages, PINs and gifts out of this file.
 export const birthdayContent = {
@@ -8,7 +9,7 @@ export const birthdayContent = {
   welcome: {
     eyebrow: 'TODAY IS A LITTLE MORE SPECIAL',
     title: 'Happy birthday,',
-    recipient: '[Your name]',
+    recipient: 'My Love',
     description: 'A little world of surprises, made just for you.\nTake your time. The magic is in the little things.',
     action: 'Open Your Surprise',
     note: 'Your birthday adventure starts here',
@@ -115,16 +116,61 @@ export const birthdayContent = {
       error: 'This audio could not be played. Retry, or inspect the cassette to continue.',
     },
   },
-  letterPlaceholder: {
+  letter: {
     eyebrow: 'CHAPTER 06 · A LITTLE NOTE',
     title: 'A few little words,',
-    titleAccent: 'waiting in an envelope.',
-    description: 'You explored the birthday cassette and unlocked the next chapter.',
-    label: 'Birthday Letter · Coming in Phase 7',
-    note: 'A placeholder for a future envelope and letter. Your personal message will be added later.',
+    titleAccent: 'sealed with a little love.',
+    envelopeLabel: 'A LITTLE NOTE, JUST FOR YOU',
+    recipient: '[Your name]',
+    heading: '[Your birthday letter heading]',
+    greeting: '[Your greeting]',
+    paragraphs: [
+      '[Your opening birthday message goes here.]',
+      '[Your personal birthday wishes go here. Replace this placeholder when you are ready.]',
+      '[Your final little note of love goes here.]',
+    ],
+    closing: '[Your closing]',
+    signature: '[Your name or signature]',
+    placeholderLabel: 'PLACEHOLDER LETTER · READY TO PERSONALIZE',
+    openAction: 'Open Envelope',
+    pullAction: 'Read Letter',
+    pullTab: 'Pull to read',
+    closeAction: 'Close Letter',
+    replayAction: 'Replay',
+    continueAction: 'Continue',
+    instructions: 'Click the seal to open. Then click the paper, drag it upward, or choose Read Letter.',
+    keyboardHint: 'Use Tab and Enter / Space. Escape cancels a drag or closes an open letter.',
+    lockedMessage: 'Open the envelope and pull out the letter to unlock the next chapter.',
+    unlockedMessage: 'A little letter discovered. Your next chapter is ready.',
+    statusLabels: {
+      closed: 'A little note is waiting for you.',
+      opening: 'Opening your little envelope…', rising: 'Opening your little envelope…',
+      offered: 'Your letter is peeking out. Pull it up to read.',
+      dragging: 'Pull upward to take out the letter. Release early to put it back.',
+      canceling: 'Putting the paper edge back…',
+      lifting: 'Taking your letter out…', presenting: 'Taking your letter out…',
+      reading: 'Your letter is open. Take your time.',
+      returning: 'Folding this little moment away…', tucking: 'Folding this little moment away…',
+      lowering: 'Folding this little moment away…', sealing: 'Folding this little moment away…',
+    },
+    settings: {
+      dragDistancePx: 130,
+      dragCommitThreshold: 0.35,
+      durations: { opening: 650, rising: 650, lifting: 450, presenting: 350, returning: 350, tucking: 450, lowering: 450, sealing: 550, canceling: 220 },
+    },
     backAction: 'Back to the beginning',
   },
-  // Planned flow; chapters after the cassette are intentionally unimplemented.
+  machine: birthdayMachine,
+  mysteryGiftPlaceholder: {
+    eyebrow: 'CHAPTER 08 · STILL A LITTLE MYSTERY',
+    title: 'A little surprise,',
+    titleAccent: 'still under wraps.',
+    description: 'You completed all three birthday spins.',
+    label: 'Mystery Gift · Coming in Phase 9',
+    note: 'A placeholder for the next chapter. The surprise remains wrapped for now.',
+    backAction: 'Back to the machine',
+  },
+  // Planned flow; chapters after the gift machine are intentionally unimplemented.
   journey: [
     { id: 'welcome', label: 'Welcome' },
     { id: 'pin', label: 'PIN challenge' },

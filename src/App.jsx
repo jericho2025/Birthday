@@ -14,6 +14,11 @@ import { BirthdayFlipbook } from './components/BirthdayFlipbook'
 import { isBookComplete } from './components/bookState'
 import { CassettePlayer } from './components/CassettePlayer'
 import { isCassetteComplete } from './components/cassetteState'
+import { BirthdayLetter } from './components/BirthdayLetter'
+import { isLetterComplete } from './components/letterState'
+import { GiftSlotMachine } from './components/GiftSlotMachine'
+import { machineNextStage } from './components/giftMachineState'
+import { useMachineSession } from './components/useMachineSession'
 import './App.css'
 
 export default function App() {
@@ -21,6 +26,7 @@ export default function App() {
   const [motionPaused, setMotionPaused] = useState(false)
   const headingRef = useRef(null)
   const previousStage = useRef(stage)
+  const [machine, machineDispatch] = useMachineSession(birthdayContent.machine)
 
   const unlockPin = useCallback((pin) => {
     if (isValidPin(pin) && pin === birthdayContent.pinChallenge.pin) {
@@ -52,13 +58,23 @@ export default function App() {
     }
   }, [])
 
+  const completeLetter = useCallback((letter) => {
+    if (isLetterComplete(letter)) {
+      setStage((current) => current === 'letter' ? 'machine' : current)
+    }
+  }, [])
+
+  const completeMachine = useCallback((result) => {
+    setStage((current) => machineNextStage(current, result, birthdayContent.machine))
+  }, [])
+
   useEffect(() => {
     if (previousStage.current !== stage) headingRef.current?.focus()
     previousStage.current = stage
   }, [stage])
 
   return (
-    <div className={`birthday-app${motionPaused ? ' motion-paused' : ''}${stage === 'album' ? ' book-active' : ''}${stage === 'cassette' ? ' cassette-active' : ''}`}>
+    <div className={`birthday-app${motionPaused ? ' motion-paused' : ''}${stage === 'album' ? ' book-active' : ''}${stage === 'cassette' ? ' cassette-active' : ''}${stage === 'letter' ? ' letter-active' : ''}${stage === 'machine' ? ' machine-active' : ''}`}>
       <CelebrationBackdrop />
       <ExperienceShell content={birthdayContent} stage={stage} motionPaused={motionPaused} onToggleMotion={() => setMotionPaused((paused) => !paused)}>
         {stage === 'welcome' ? (
@@ -73,8 +89,12 @@ export default function App() {
           <BirthdayFlipbook key="album" content={birthdayContent.book} headingRef={headingRef} motionPaused={motionPaused} onComplete={completeBook} onBack={() => setStage('welcome')} />
         ) : stage === 'cassette' ? (
           <CassettePlayer key="cassette" content={birthdayContent.cassette} headingRef={headingRef} onComplete={completeCassette} onBack={() => setStage('welcome')} />
+        ) : stage === 'letter' ? (
+          <BirthdayLetter key="letter" content={birthdayContent.letter} headingRef={headingRef} motionPaused={motionPaused} onComplete={completeLetter} onBack={() => setStage('welcome')} />
+        ) : stage === 'machine' ? (
+          <GiftSlotMachine key="machine" content={birthdayContent.machine} state={machine} dispatch={machineDispatch} headingRef={headingRef} motionPaused={motionPaused} onComplete={completeMachine} onBack={() => setStage('welcome')} />
         ) : (
-          <StagePlaceholder key="letter" content={birthdayContent.letterPlaceholder} headingRef={headingRef} onBack={() => setStage('welcome')} />
+          <StagePlaceholder key="reveal" content={birthdayContent.mysteryGiftPlaceholder} headingRef={headingRef} onBack={() => setStage('machine')} />
         )}
       </ExperienceShell>
     </div>

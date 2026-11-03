@@ -10,6 +10,10 @@ import { TilePuzzle } from './components/TilePuzzle'
 import { isPuzzleSolved } from './components/puzzleState'
 import { BirthdayQuiz } from './components/BirthdayQuiz'
 import { isQuizComplete } from './components/quizState'
+import { BirthdayFlipbook } from './components/BirthdayFlipbook'
+import { isBookComplete } from './components/bookState'
+import { CassettePlayer } from './components/CassettePlayer'
+import { isCassetteComplete } from './components/cassetteState'
 import './App.css'
 
 export default function App() {
@@ -36,13 +40,25 @@ export default function App() {
     }
   }, [])
 
+  const completeBook = useCallback((book) => {
+    if (isBookComplete(book, birthdayContent.book.pages.length)) {
+      setStage((current) => current === 'album' ? 'cassette' : current)
+    }
+  }, [])
+
+  const completeCassette = useCallback((player) => {
+    if (isCassetteComplete(player)) {
+      setStage((current) => current === 'cassette' ? 'letter' : current)
+    }
+  }, [])
+
   useEffect(() => {
     if (previousStage.current !== stage) headingRef.current?.focus()
     previousStage.current = stage
   }, [stage])
 
   return (
-    <div className={`birthday-app${motionPaused ? ' motion-paused' : ''}`}>
+    <div className={`birthday-app${motionPaused ? ' motion-paused' : ''}${stage === 'album' ? ' book-active' : ''}${stage === 'cassette' ? ' cassette-active' : ''}`}>
       <CelebrationBackdrop />
       <ExperienceShell content={birthdayContent} stage={stage} motionPaused={motionPaused} onToggleMotion={() => setMotionPaused((paused) => !paused)}>
         {stage === 'welcome' ? (
@@ -53,8 +69,12 @@ export default function App() {
           <TilePuzzle key="puzzle" content={birthdayContent.puzzle} headingRef={headingRef} onComplete={completePuzzle} onBack={() => setStage('welcome')} />
         ) : stage === 'quiz' ? (
           <BirthdayQuiz key="quiz" content={birthdayContent.quiz} questions={birthdayContent.quizQuestions} headingRef={headingRef} onComplete={completeQuiz} onBack={() => setStage('welcome')} />
+        ) : stage === 'album' ? (
+          <BirthdayFlipbook key="album" content={birthdayContent.book} headingRef={headingRef} motionPaused={motionPaused} onComplete={completeBook} onBack={() => setStage('welcome')} />
+        ) : stage === 'cassette' ? (
+          <CassettePlayer key="cassette" content={birthdayContent.cassette} headingRef={headingRef} onComplete={completeCassette} onBack={() => setStage('welcome')} />
         ) : (
-          <StagePlaceholder key="album" content={birthdayContent.albumPlaceholder} headingRef={headingRef} onBack={() => setStage('welcome')} />
+          <StagePlaceholder key="letter" content={birthdayContent.letterPlaceholder} headingRef={headingRef} onBack={() => setStage('welcome')} />
         )}
       </ExperienceShell>
     </div>

@@ -1,3 +1,5 @@
+import { birthdayBook } from './birthdayBook.js'
+
 // Public-safe content only. Keep private media, messages, PINs and gifts out of this file.
 export const birthdayContent = {
   brand: 'A little birthday magic',
@@ -73,16 +75,56 @@ export const birthdayContent = {
     unavailableMessage: 'These little questions are still being prepared. Please come back soon.',
     backAction: 'Back to the beginning',
   },
-  albumPlaceholder: {
-    eyebrow: 'CHAPTER 04 · LITTLE MOMENTS',
-    title: 'A few pages,',
-    titleAccent: 'waiting to be filled.',
-    description: 'You completed the birthday quiz and unlocked the photo album chapter.',
-    label: '3D Photo Flipbook · Coming in Phase 5',
-    note: 'A placeholder for a future two-page photo album. Photos and captions will be added later.',
+  book: birthdayBook,
+  cassette: {
+    eyebrow: 'CHAPTER 05 · A LITTLE MELODY',
+    title: 'A little song,',
+    titleAccent: 'just for you.',
+    songTitle: '[Your song title]',
+    artist: '[Artist or recording credit]',
+    tapeLabel: '[Your cassette label]',
+    message: '[Your short romantic message goes here.]',
+    // Add an approved local file in public/audio/, e.g. /audio/birthday-song.mp3.
+    audioSrc: '',
+    initialVolume: 0.65,
+    startMuted: false,
+    sideLabel: 'SIDE A',
+    formatLabel: 'STEREO · A LITTLE BIRTHDAY MIX',
+    inspectAction: 'Inspect Cassette',
+    closeInspectionAction: 'Put the note away',
+    inspectionTitle: 'A little note on the sleeve',
+    placeholderTitle: 'Add your song here',
+    placeholderMessage: 'No audio file is configured yet. Inspect the cassette to discover its little note and continue.',
+    playAction: 'Play',
+    pauseAction: 'Pause',
+    restartAction: 'Restart',
+    muteAction: 'Mute',
+    unmuteAction: 'Unmute',
+    retryAction: 'Retry audio',
+    volumeLabel: 'Volume',
+    seekLabel: 'Playback position',
+    continueAction: 'Continue',
+    backAction: 'Back to the beginning',
+    lockedMessage: 'Press Play or inspect the cassette to unlock the next chapter.',
+    unlockedMessage: 'A little melody explored. Your next chapter is ready.',
+    keyboardHint: 'Use Tab and Enter / Space for the buttons; arrow keys adjust the sliders.',
+    statusLabels: {
+      unavailable: 'No song added yet', loading: 'Loading your audio…', ready: 'Ready when you are',
+      starting: 'Starting playback…', playing: 'Now playing', paused: 'Paused', buffering: 'Waiting for audio…',
+      ended: 'A lovely little ending', blocked: 'Press Play to try again, or inspect the cassette to continue.',
+      error: 'This audio could not be played. Retry, or inspect the cassette to continue.',
+    },
+  },
+  letterPlaceholder: {
+    eyebrow: 'CHAPTER 06 · A LITTLE NOTE',
+    title: 'A few little words,',
+    titleAccent: 'waiting in an envelope.',
+    description: 'You explored the birthday cassette and unlocked the next chapter.',
+    label: 'Birthday Letter · Coming in Phase 7',
+    note: 'A placeholder for a future envelope and letter. Your personal message will be added later.',
     backAction: 'Back to the beginning',
   },
-  // Planned flow; chapters after the quiz are intentionally unimplemented.
+  // Planned flow; chapters after the cassette are intentionally unimplemented.
   journey: [
     { id: 'welcome', label: 'Welcome' },
     { id: 'pin', label: 'PIN challenge' },

@@ -1,0 +1,31 @@
+.journey-heart { display: flex; align-items: center; gap: 10px; min-width: 0; height: 38px; }
+.journey-heart > svg { width: 34px; height: 34px; flex-shrink: 0; overflow: visible; }
+.journey-heart-fill { transition: y .7s cubic-bezier(.2,.7,.25,1); }
+.journey-heart-copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; text-align: left; }
+.journey-heart-copy > span { font-size: 11px; color: #7c6289; letter-spacing: .2px; font-variant-numeric: tabular-nums; }
+.journey-heart-copy b { font-weight: 600; color: #76577e; }
+.journey-heart-copy .footer-note { font: italic 11px/1.4 var(--serif); color: #8c778f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.journey-heart.is-full > svg { filter: drop-shadow(0 0 5px #b486b45c); animation: journey-heart-glow 2s ease-in-out 2; }
+.journey-nav { justify-self: center; }
+.journey-progress { position: relative; display: flex; gap: 4px; list-style: none; padding: 0; margin: 0; height: 38px; align-items: center; isolation: isolate; }
+.journey-progress::before { content: ''; position: absolute; z-index: -1; height: 1px; top: 19px; left: 16px; right: 16px; background: linear-gradient(90deg, #c9af8c 0 var(--earned, 0%), #e4d7e7 var(--earned, 0%) 100%); }
+.journey-stop { position: relative; width: 32px; height: 32px; }
+.journey-step { position: relative; width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 1px solid #e0d1e5; background: #fbf7fc; border-radius: 50%; color: #947d9e; font: 10px var(--serif); font-variant-numeric: tabular-nums; transition: transform .2s, background .2s, border-color .2s, box-shadow .2s; }
+.journey-step:hover:not(:disabled) { transform: translateY(-2px); border-color: #b69bc5; background: #fffdf8; box-shadow: 0 3px 8px #9a78941a; }
+.journey-step:active:not(:disabled) { transform: translateY(0); }
+.journey-step:disabled { cursor: default; }
+.is-completed .journey-step { border-color: #d6c09d; background: linear-gradient(130deg, #fffcf4, #f4e8db); color: #977952; }
+.is-active .journey-step { background: linear-gradient(145deg, #a283b5, #816094); border-color: #9472a8; color: white; box-shadow: 0 0 0 3px #eadbed80, 0 4px 12px #9e7aa32b; }
+.is-available .journey-step { border-color: #b99ac8; background: #f1e6f6; color: #825c98; }
+.is-locked .journey-step { color: #b39ebc; background: #fbf8fc; border-color: #e7dfe9; }
+.journey-step > svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.journey-check { position: absolute; top: -5px; right: -3px; display: grid; place-items: center; width: 12px; height: 12px; border-radius: 50%; color: #ab8b5f; background: #fffaf2; font: 11px var(--serif); }
+.journey-stop-label { position: absolute; bottom: 43px; left: 50%; width: max-content; max-width: 190px; min-width: 125px; padding: 9px 12px; transform: translate(-50%, 4px); text-align: center; border: 1px solid #e0d2e5; border-radius: 9px; color: #73557f; background: #fffdf8; box-shadow: 0 6px 20px #7d5c8814; font-size: 11px; line-height: 1.4; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .15s, transform .15s, visibility .15s; }
+.journey-stop-label small { display: block; font-size: 9px; color: #9b859d; margin-top: 3px; }
+.journey-stop:hover .journey-stop-label, .journey-stop:focus-within .journey-stop-label { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+@keyframes journey-heart-glow { 0%, 100% { filter: drop-shadow(0 0 4px #b486b44d); } 50% { filter: drop-shadow(0 0 8px #d4a6b98c); } }
+.motion-paused .journey-heart > svg { animation: none !important; }
+.motion-paused .journey-heart-fill, .motion-paused .journey-step, .motion-paused .journey-stop-label { transition: none; }
+@media (prefers-reduced-motion: reduce) { .journey-heart > svg { animation: none !important; } .journey-heart-fill, .journey-step, .journey-stop-label { transition: none; } }
+@media (max-width: 1100px) { .journey-progress { gap: 2px; } .journey-heart-copy .footer-note { max-width: 170px; } }
+@media (max-width: 800px) { .journey-heart-copy .footer-note { display: none; } .journey-progress { gap: 1px; } .journey-stop, .journey-step { width: 27px; height: 27px; } }

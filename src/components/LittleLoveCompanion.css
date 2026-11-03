@@ -1,0 +1,29 @@
+.love-companion { display: grid; grid-template-columns: 40px minmax(0, 1fr) 54px; align-items: center; gap: 9px; width: 340px; height: 40px; justify-self: center; color: #7c5872; }
+.love-mascot { display: block; width: 40px; height: 38px; overflow: visible; filter: drop-shadow(0 3px 3px #b17c9d18); }
+.love-mascot-body { transform-origin: 40px 45px; animation: love-idle 6s ease-in-out infinite; }
+.love-eyes { transform-box: fill-box; transform-origin: center; animation: love-blink 8s linear infinite; }
+.companion-copy { position: relative; min-width: 0; height: 40px; display: flex; align-items: center; }
+.companion-idle { font: italic 13px var(--serif); color: #967b93; transition: opacity .2s; }
+.companion-idle i { color: #bea783; margin-left: 8px; font-style: normal; font-size: 12px; }
+.companion-reaction { position: absolute; inset: 0; display: flex; align-items: center; margin: 0; color: #7b5771; font-size: 11px; line-height: 1.6; opacity: 0; }
+.has-reaction .companion-idle { opacity: 0; }
+.has-reaction .companion-reaction { opacity: 1; animation: love-message-in .25s ease both; }
+.has-reaction .love-mascot-body { animation: love-delight .6s ease both; }
+.is-quiet .love-mascot-body, .is-quiet .love-eyes { animation: none; }
+.is-quiet .companion-idle { color: #a28c9f; }
+.companion-controls { display: flex; gap: 2px; }
+.companion-controls button { width: 26px; height: 26px; display: grid; place-items: center; padding: 4px; color: #9b8098; background: transparent; border: 1px solid transparent; border-radius: 50%; transition: color .2s, background .2s, border-color .2s; }
+.companion-controls button:hover { background: #f4e7f0; border-color: #e7cfdf; color: #79576e; }
+.companion-controls button[aria-pressed="true"] { background: #eee4f0; color: #7b5d85; }
+.companion-controls svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.love-companion.is-dismissed { display: flex; justify-content: center; }
+.companion-restore { display: flex; align-items: center; gap: 8px; min-height: 32px; color: #957b92; border: 1px solid transparent; border-radius: 20px; padding: 4px 12px; background: transparent; font-size: 10px; transition: background .2s, border-color .2s; }
+.companion-restore span { color: #ba90ab; font: 23px var(--serif); }
+.companion-restore:hover { background: #fff8; border-color: #e6d4e1; }
+@keyframes love-idle { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-1.5px) rotate(2deg); } }
+@keyframes love-blink { 0%, 90%, 94%, 100% { transform: scaleY(1); } 92% { transform: scaleY(.12); } }
+@keyframes love-delight { 0%, 100% { transform: translateY(0) rotate(0); } 40% { transform: translateY(-3px) rotate(-5deg); } 70% { transform: translateY(0) rotate(3deg); } }
+@keyframes love-message-in { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+.motion-paused .love-companion *, .motion-paused .love-companion *::before { animation: none !important; transition: none !important; }
+@media (prefers-reduced-motion: reduce) { .love-companion * { animation: none !important; transition: none !important; } }
+@media (max-width: 1100px) { .love-companion { width: 285px; gap: 6px; } .companion-reaction { font-size: 10px; } }

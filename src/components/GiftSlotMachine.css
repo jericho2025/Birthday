@@ -96,3 +96,4 @@
 @media (prefers-reduced-motion: reduce) { .machine-confetti { display: none; } }
 @media (max-height: 820px) { .gift-machine { --machine-width: 450px; --machine-height: 350px; --reel-height: 72px; } .machine-heading h1 { font-size: 32px; } .machine-body { padding: 18px 28px; } .machine-marquee { min-height: 26px; font-size: 12px; } .machine-reel-frame { padding: 8px; margin-top: 12px; } .machine-reels { padding: 4px; } .machine-dashboard { margin-top: 16px; } .machine-spin { min-height: 45px; } .machine-lower-trim { margin-top: 12px; } .machine-story { top: 70px; width: 210px; } .machine-result { font-size: 17px; min-height: 68px; } .machine-prize h2 { font-size: 18px; } .machine-layout { margin-top: 8px; } }
 @media (max-width: 1100px) { .gift-machine { --machine-width: 410px; } .machine-story { left: calc(50% + var(--machine-width) / 2 + 55px); width: 170px; } }
+@media (max-height: 800px) and (min-width: 801px) { .machine-active main { padding-bottom: 2px; } }

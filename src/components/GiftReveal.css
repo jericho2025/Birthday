@@ -7,7 +7,7 @@
 .gift-heading h1 { font-size: clamp(38px, 3.5vw, 52px); line-height: 1.08; letter-spacing: -1.8px; }
 .gift-heading h1 em { margin-top: 2px; }
 .gift-heading > p:last-child { margin: 17px 0 0; color: var(--muted); font: italic 16px var(--serif); }
-.gift-theatre { position: relative; height: 350px; display: grid; place-items: center; perspective: 1200px; isolation: isolate; }
+.gift-theatre { position: relative; height: 350px; display: grid; place-items: center; perspective: 1200px; isolation: isolate; overflow: clip; }
 .gift-halo { position: absolute; width: 620px; max-width: 90%; height: 320px; border-radius: 50%; background: radial-gradient(ellipse, #f6d7e775, #f9eee933 55%, transparent 72%); }
 .gift-theatre::after { content: ''; position: absolute; width: 330px; height: 35px; bottom: 35px; background: #966a882b; filter: blur(14px); border-radius: 50%; transform: rotate(-5deg); }
 .gift-box { position: relative; width: 276px; height: 204px; margin-top: 42px; transform: rotateX(-9deg) rotateY(-15deg); transform-style: preserve-3d; z-index: 2; }

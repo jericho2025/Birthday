@@ -78,3 +78,8 @@
 .motion-paused .cassette-tape, .motion-paused .cassette-note { animation: none !important; }
 @media (max-height: 850px) and (min-width: 801px) { .cassette-heading { margin-bottom: 22px; } .cassette-heading h1 { font-size: 36px; } .cassette-player-panel { padding: 22px; } .cassette-panel-description { margin-bottom: 18px; } .cassette-journey-actions { margin-top: 16px; } }
 @media (max-width: 1000px) { .cassette-layout { gap: 30px; grid-template-columns: 1.3fr 1fr; } .tape-song-title { font-size: 20px; } .tape-label { padding: 9px 12px; } }
+@media (max-height: 800px) and (min-width: 801px) {
+  .cassette-active .site-header { padding-top: 14px; padding-bottom: 10px; }
+  .cassette-active .site-footer { padding-top: 8px; padding-bottom: 14px; }
+  .cassette-heading { margin-bottom: 14px; }
+}

@@ -15,7 +15,7 @@ function jackpot() { return nextResult(nextResult(nextResult())) }
 function completed() { const state = jackpot(); return reduce(state, { type: 'celebrationFinished', transaction: state.transaction }) }
 function storage() {
   const values = new Map()
-  return { getItem: (key) => values.get(key) || null, setItem: (key, value) => values.set(key, value) }
+  return { getItem: (key) => values.get(key) || null, setItem: (key, value) => values.set(key, value), removeItem: (key) => values.delete(key) }
 }
 
 test('initial state has three spins, fixed symbols, and no completed result', () => {
@@ -130,22 +130,28 @@ test('a remount restores finished results and cannot grant extra spins after com
   assert.equal(start(restored), restored)
 })
 
-test('an interrupted spin resumes the same transaction and preserves already stopped reels', () => {
+test('refresh retries an interrupted spin from the last settled result, without saved partial reels', () => {
   const store = storage()
   const partial = stop(start(nextResult()), 0)
   saveMachineState(store, partial, config)
   const restored = loadMachineState(store, config)
-  assert.deepEqual(restored, partial)
-  assert.equal(start(restored), restored)
-  assert.equal(stop(stop(restored, 1), 2).finishedSpins, 2)
+  assert.equal(restored.phase, 'ready')
+  assert.equal(restored.finishedSpins, 1)
+  assert.deepEqual(restored.stopped, [true, true, true])
+  assert.deepEqual(restored.reels, config.outcomes[0].symbols)
+  assert.equal(nextResult(restored).finishedSpins, 2)
 })
 
-test('restoring a jackpot in progress does not unlock Continue before celebration settles', () => {
+test('refresh during jackpot celebration retries the third spin and keeps Continue locked', () => {
   const store = storage()
   saveMachineState(store, jackpot(), config)
   const restored = loadMachineState(store, config)
   assert.equal(isGiftMachineComplete(restored, config), false)
-  assert.equal(isGiftMachineComplete(reduce(restored, { type: 'celebrationFinished', transaction: restored.transaction }), config), true)
+  assert.equal(restored.phase, 'ready')
+  assert.equal(restored.finishedSpins, 2)
+  assert.equal(isGiftMachineComplete(reduce(restored, { type: 'celebrationFinished', transaction: restored.transaction }), config), false)
+  const third = nextResult(restored)
+  assert.equal(isGiftMachineComplete(reduce(third, { type: 'celebrationFinished', transaction: third.transaction }), config), true)
 })
 
 test('malformed or stale storage is ignored, and blocked storage does not break memory state', () => {

@@ -83,4 +83,5 @@
 .book-continue { padding: 9px 17px; gap: 18px; font-size: 11px; }
 .book-continue:disabled { opacity: .45; cursor: default; }
 .motion-paused .book-rig { transition: none; }
+@media (max-height: 800px) and (min-width: 801px) { .book-active .site-footer { padding-top: 10px; padding-bottom: 14px; } }
 @media (max-width: 1000px) { .book-screen { --book-height: min(46vw, calc(100svh - 420px)); } .book-controls { gap: 6px; } .book-control { padding-inline: 10px; } }

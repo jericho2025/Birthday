@@ -1,4 +1,4 @@
-import { useReducer, useRef, useState } from 'react'
+import { useEffect, useReducer, useRef, useState } from 'react'
 import { createPuzzleState, isPuzzleSolved, reducePuzzle, shuffleTiles } from './puzzleState'
 import './Screens.css'
 import './TilePuzzle.css'
@@ -11,16 +11,22 @@ const confetti = Array.from({ length: 30 }, (_, index) => ({
   rotation: `${index * 47}deg`,
 }))
 
-export function TilePuzzle({ content, headingRef, onComplete, onBack }) {
+export function TilePuzzle({ content, headingRef, onComplete, onBack, onReaction }) {
   const [puzzle, dispatch] = useReducer(reducePuzzle, undefined, createPuzzleState)
   const [draggedId, setDraggedId] = useState(null)
   const [dropTarget, setDropTarget] = useState(null)
   const dragSource = useRef(null)
   const lastDragEnd = useRef(-Infinity)
   const solved = isPuzzleSolved(puzzle.tiles)
+  const previousSolved = useRef(false)
   const placed = puzzle.tiles.filter((id, index) => id === index + 1).length
   const photoMode = content.media.mode === 'photo' && Boolean(content.media.photoSrc)
   const message = solved ? content.successMessage : puzzle.selected === null ? content.idleMessage : `${content.tileLabel} ${puzzle.selected}. ${content.selectedMessage}`
+
+  useEffect(() => {
+    if (solved && !previousSolved.current) onReaction?.('puzzleComplete')
+    previousSolved.current = solved
+  }, [solved, onReaction])
 
   function endDrag(event) {
     dragSource.current = null

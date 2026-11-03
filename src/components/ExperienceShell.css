@@ -1,21 +1,20 @@
 .experience-shell { min-height: 100svh; display: flex; flex-direction: column; position: relative; z-index: 1; }
-.site-header { display: flex; align-items: center; justify-content: space-between; padding: 40px 5.2%; gap: 24px; }
+.site-header { display: grid; grid-template-columns: minmax(0, 1fr) 360px minmax(0, 1fr); align-items: center; padding: 40px 5.2%; gap: 24px; }
 .wordmark { display: flex; align-items: center; gap: 11px; font-family: var(--serif); font-size: 20px; letter-spacing: -.4px; }
 .brand-flower { font-size: 31px; color: #9475ae; line-height: 1; }
-.date-badge { display: flex; gap: 9px; align-items: center; border: 1px solid #dcd1e4; border-radius: 30px; padding: 10px 18px; font-size: 11px; letter-spacing: 1.7px; text-transform: uppercase; background: #fff9; }
+.date-badge { justify-self: end; display: flex; gap: 9px; align-items: center; border: 1px solid #dcd1e4; border-radius: 30px; padding: 10px 18px; font-size: 11px; letter-spacing: 1.7px; text-transform: uppercase; background: #fff9; }
 .date-badge span { font-size: 18px; line-height: 1; color: #9673ad; }
 main { display: grid; place-items: center; flex: 1; padding: 14px 24px 40px; }
 .site-footer { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; padding: 27px 5.2% 33px; }
 .footer-note { font-family: var(--serif); font-style: italic; color: var(--muted); font-size: 14px; }
-.journey-progress { list-style: none; display: flex; align-items: center; gap: 8px; padding: 0; margin: 0; }
-.journey-progress li { width: 5px; height: 5px; background: #d9cfe2; border-radius: 50%; transition: background .3s; }
-.journey-progress li.is-reached { background: #9171aa; }
-.journey-progress li[aria-current] { width: 19px; border-radius: 6px; }
 .motion-button { justify-self: end; display: flex; align-items: center; gap: 8px; background: transparent; color: #756580; border: 1px solid transparent; border-radius: 6px; padding: 8px 0 8px 8px; font-size: 11px; }
 .motion-button:hover { color: #513765; }
 .motion-button span { font-size: 15px; }
 @media (max-width: 800px) {
-  .site-header { padding: 30px; }
+  .site-header { padding: 24px 30px; grid-template-columns: 1fr auto; }
+  .site-header .love-companion { grid-row: 2; grid-column: 1 / -1; }
   .site-footer { grid-template-columns: 1fr auto; padding: 24px 30px; }
   .footer-note { display: none; }
+  .site-footer .motion-button { grid-column: 1 / -1; justify-self: center; }
 }
+@media (min-width: 801px) and (max-width: 1100px) { .site-header { grid-template-columns: minmax(0, 1fr) 285px minmax(0, 1fr); gap: 15px; } .wordmark { font-size: 18px; } }

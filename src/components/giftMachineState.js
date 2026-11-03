@@ -77,13 +77,27 @@ export function loadMachineState(storage, config) {
   if (!isValidMachineConfig(config)) return initial
   try {
     const saved = JSON.parse(storage?.getItem(MACHINE_SESSION_KEY) || 'null')
-    return saved?.script === scriptSignature(config) && isValidMachineState(saved.state, config) ? saved.state : initial
+    return saved?.script === scriptSignature(config) && isValidMachineState(saved.state, config) ? stableMachineState(saved.state, config) : initial
   } catch { return initial }
+}
+
+// Refresh retries an interrupted spin from its previous settled result. Neither
+// partial reels nor an unfinished jackpot celebration can grant completion.
+export function stableMachineState(state, config) {
+  if (!isValidMachineState(state, config)) return createMachineState(config)
+  const count = state.phase === 'celebrating' ? MACHINE_SPINS - 1 : state.finishedSpins
+  return { phase: state.phase === 'complete' ? 'complete' : 'ready', finishedSpins: count,
+    history: state.history.slice(0, count).map((result) => [...result]),
+    reels: [...(count ? config.outcomes[count - 1].symbols : config.initialSymbols)], stopped: [true, true, true], transaction: count }
 }
 
 export function saveMachineState(storage, state, config) {
   if (!isValidMachineState(state, config)) return
-  try { storage?.setItem(MACHINE_SESSION_KEY, JSON.stringify({ script: scriptSignature(config), state })) } catch { /* Memory state remains functional when storage is unavailable. */ }
+  const stable = stableMachineState(state, config)
+  try {
+    if (stable.finishedSpins === 0) storage?.removeItem(MACHINE_SESSION_KEY)
+    else storage?.setItem(MACHINE_SESSION_KEY, JSON.stringify({ script: scriptSignature(config), state: stable }))
+  } catch { /* Memory state remains functional when storage is unavailable. */ }
 }
 
 export function makeReelTrack(config, from, target, index) {

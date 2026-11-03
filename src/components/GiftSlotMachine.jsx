@@ -8,12 +8,13 @@ import './GiftSlotMachine.css'
 
 const confetti = Array.from({ length: 32 }, (_, index) => ({ left: `${(index * 37 + 3) % 100}%`, delay: `${(index % 5) * 0.04}s`, drift: `${(index * 29) % 140 - 70}px`, rotate: `${index * 47}deg` }))
 
-export function GiftSlotMachine({ content, state, dispatch, headingRef, motionPaused, onComplete, onBack }) {
+export function GiftSlotMachine({ content, state, dispatch, headingRef, motionPaused, onComplete, onBack, onReaction }) {
   const reducedMotion = useReducedMotion()
   const reduced = reducedMotion || motionPaused
   const { muted, toggleMute, begin, stopSpin, stopCue, winCue } = useMachineSound(content.settings)
   const requestedRef = useRef(false)
   const celebratedRef = useRef(null)
+  const previousResult = useRef({ count: state.finishedSpins, phase: state.phase })
   const continueRef = useRef(null)
   const configured = isValidMachineConfig(content)
   const spinning = state.phase === 'spinning'
@@ -27,6 +28,13 @@ export function GiftSlotMachine({ content, state, dispatch, headingRef, motionPa
     stopCue(index)
     dispatch({ type: 'reelStopped', reelIndex: index, transaction })
   }, [dispatch, stopCue])
+
+  useEffect(() => {
+    const previous = previousResult.current
+    previousResult.current = { count: state.finishedSpins, phase: state.phase }
+    if (state.phase === 'celebrating' && previous.phase !== 'celebrating') onReaction?.('jackpot')
+    else if (state.phase === 'ready' && state.finishedSpins > previous.count) onReaction?.('nearMiss')
+  }, [state.finishedSpins, state.phase, onReaction])
 
   useEffect(() => {
     if (state.phase === 'ready') requestedRef.current = false

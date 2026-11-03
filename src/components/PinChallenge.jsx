@@ -1,14 +1,22 @@
-import { useEffect, useReducer } from 'react'
+import { useEffect, useReducer, useRef } from 'react'
 import { initialPinState, isValidPin, pinActionForKey, reducePin } from './pinState'
 import './Screens.css'
 import './PinChallenge.css'
 
-export function PinChallenge({ content, headingRef, onUnlocked, onBack }) {
+export function PinChallenge({ content, headingRef, onUnlocked, onBack, onReaction }) {
   const [attempt, dispatch] = useReducer((state, action) => reducePin(state, action, content.pin), initialPinState)
   const unlocked = attempt.status === 'unlocked'
   const configured = isValidPin(content.pin)
   const disabled = unlocked || !configured
   const message = !configured ? content.unavailableMessage : unlocked ? content.successMessage : attempt.status === 'wrong' ? content.wrongMessage : content.idleMessage
+  const previousReaction = useRef(initialPinState)
+
+  useEffect(() => {
+    if (previousReaction.current === attempt) return
+    previousReaction.current = attempt
+    if (attempt.status === 'wrong') onReaction?.('pinWrong')
+    if (attempt.status === 'unlocked') onReaction?.('pinCorrect')
+  }, [attempt, onReaction])
 
   useEffect(() => {
     function handleKeyDown(event) {

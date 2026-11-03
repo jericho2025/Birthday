@@ -1,0 +1,119 @@
+/* Birthday 2.0: shared materials and restrained feedback. Scene-specific sizes,
+   motion transactions, media, and progression remain with their components. */
+:root {
+  --ink: #4d3a5c;
+  --muted: #76657f;
+  --purple: #866393;
+  --blush: #dfb2ca;
+  --gold: #b39a72;
+  --ease-gift: cubic-bezier(.2,.7,.25,1);
+  --surface-shadow: 0 18px 55px #77528410, 0 3px 10px #76527d06, inset 0 1px 0 #fff;
+}
+.birthday-app { background: radial-gradient(ellipse at 50% 36%, #fffdf7 0%, #fcf8fb 45%, #f0e7f7 100%); }
+.birthday-app::after { border-color: #ffffffba; box-shadow: inset 0 0 50px #fff2; }
+.site-header { position: relative; z-index: 5; }
+.wordmark { color: #61496e; letter-spacing: -.5px; }
+.brand-flower { color: #a17bb0; }
+.date-badge { background: linear-gradient(120deg, #fffc, #faf5fcb3); border-color: #e0d1e7; box-shadow: 0 3px 15px #92709808, inset 0 1px 0 #fff; color: #80648f; }
+.motion-button { border-radius: 20px; padding: 7px 11px; border-color: #dfd0e499; background: #fff6; color: #7d6688; transition: background .2s, border-color .2s; }
+.motion-button:hover { color: #674a76; border-color: #cdb6d9; background: #fff9; }
+.motion-button[aria-pressed="true"] { background: #efe2f3; border-color: #cbb3d7; }
+button:focus-visible, .book-stage:focus-visible, .finale-card:focus-visible { outline: 2px solid #9473ab; outline-offset: 4px; }
+.screen:not(.final-celebration) { animation: gift-scene-arrive .5s var(--ease-gift) both; }
+.eyebrow { color: #92769e; }
+.screen-description { color: var(--muted); }
+.primary-button { position: relative; border-color: #896698; border-radius: 12px; background: linear-gradient(120deg, #9674a4, #7f5b91); box-shadow: 0 7px 20px #815f9724, inset 0 1px 0 #fffa, inset 0 -1px 0 #65477b33; transition: transform .22s var(--ease-gift), box-shadow .22s, filter .22s, background .22s; }
+.primary-button:hover:not(:disabled) { background: linear-gradient(120deg, #9e79ad, #805a93); transform: translateY(-2px); box-shadow: 0 11px 25px #815f9730, inset 0 1px 0 #fff8; }
+.primary-button:active:not(:disabled) { transform: translateY(1px); box-shadow: 0 3px 9px #815f9720, inset 0 1px 2px #5c3e7130; }
+.primary-button:disabled { transform: none; cursor: default; }
+.text-button { transition: color .2s, background .2s, box-shadow .2s; }
+.text-button:hover { color: #735081; background: #eee2f275; box-shadow: inset 0 -1px 0 #c8afd044; }
+.primary-button > span, .book-control, .letter-control, .cassette-small-control { transition: transform .2s var(--ease-gift), background .2s, border-color .2s, box-shadow .2s; }
+.primary-button:hover:not(:disabled) > span:last-child { transform: translateX(2px); }
+.primary-button:disabled > span { transform: none; }
+
+/* A little invitation in a warm pool of light. */
+.welcome-screen { position: relative; isolation: isolate; }
+.welcome-screen::before { content: ''; position: absolute; z-index: -1; width: 590px; height: 620px; max-height: 82svh; max-width: 90%; left: 50%; top: 43%; transform: translate(-50%, -50%); border: 1px solid #e9d8e845; border-radius: 48% 48% 8px 8px; background: radial-gradient(ellipse at 50% 22%, #fff9e3a8, #fffaf54d 45%, #fff0 70%); box-shadow: inset 0 1px 0 #fff9; pointer-events: none; }
+.welcome-screen::after { content: '✧'; position: absolute; z-index: -1; right: 10%; top: 35%; color: #c7b085; font: 20px var(--serif); opacity: .65; }
+.welcome-screen .envelope-illustration { filter: drop-shadow(0 7px 9px #a1779b14); transition: transform .5s var(--ease-gift); }
+.welcome-screen .envelope-illustration:hover { transform: translateY(-5px) rotate(-4deg); }
+.welcome-screen .envelope-body { background: linear-gradient(135deg, #eddaee, #dfc4e4); box-shadow: 0 8px 18px #9675a622, inset 0 1px 0 #fff8; }
+.welcome-screen .envelope-letter { background: #fffdf5; border-color: #e2d1d7; box-shadow: 0 2px 8px #a27e8f0c; }
+.welcome-screen h1 { color: #4f3b60; text-shadow: 0 2px 20px #b5a0b50b; }
+.welcome-screen h1 em { color: #a174a5; }
+.welcome-screen .title-star { color: #b99fba; }
+.welcome-screen .eyebrow { color: #a08663; }
+.welcome-screen .primary-button { padding-inline: 30px; border-radius: 30px; }
+.welcome-screen .action-note { font-size: 11px; color: #8c7896; }
+.welcome-screen .screen-description { line-height: 1.95; }
+
+/* Tactile challenge surfaces, with clearer selected and earned states. */
+.pin-card, .quiz-card, .cassette-player-panel { border-color: #dfcfe5; background: linear-gradient(125deg, #fffdfbed, #fcf3fbdd); box-shadow: var(--surface-shadow); }
+.pin-card { position: relative; }
+.pin-card::after { content: ''; position: absolute; inset: 7px; pointer-events: none; border: 1px solid #ffffffb3; border-radius: 16px; }
+.pin-key { border-color: #e4d3e9; background: linear-gradient(135deg, #fffafc, #f3e7f3); box-shadow: 0 2px 0 #d7c1df40, inset 0 1px 0 #fff; }
+.pin-key:hover:not(:disabled) { border-color: #c6a9d1; background: linear-gradient(135deg, #fff5fa, #eddef3); }
+.pin-indicators .is-filled { box-shadow: inset 0 1px 3px #9873a414, 0 0 0 2px #e7d8ef40; }
+.pin-unlocked .pin-card { border-color: #bda0c8; box-shadow: 0 0 0 4px #e9d9eb55, var(--surface-shadow); transition: border-color .4s, box-shadow .4s; }
+.pin-unlocked .pin-indicators .is-filled i { background: #a28b60; border-color: #a28b60; }
+.pin-unlocked .lock-body { color: #ad865e; background: linear-gradient(135deg, #fff1da, #f1deeb); box-shadow: 0 0 20px #e1c9a755; }
+.puzzle-board { border-color: #dfcfe7; box-shadow: var(--surface-shadow); background: linear-gradient(145deg, #fffdfb, #f8f0fb); }
+.puzzle-tile-face { border-color: #ffffffc9; box-shadow: 0 3px 0 #aa83ab12, 0 5px 9px #87638b09, inset 0 1px 0 #fff; }
+.puzzle-tile:hover:not([aria-disabled="true"]) .puzzle-tile-face { box-shadow: 0 7px 0 #aa83ab0c, 0 10px 15px #87638b17, inset 0 1px 0 #fff; }
+.puzzle-tile.is-drop-target .puzzle-tile-face { background-color: #f7e9f4; }
+.puzzle-complete .puzzle-board { border-color: #c3af8a; box-shadow: 0 0 0 4px #f0e5d44d, 0 14px 35px #aa88a41a, inset 0 1px 0 #fff; }
+.puzzle-complete .puzzle-feedback { color: #8c7350; }
+.puzzle-restart { background: #fffb; box-shadow: inset 0 1px 0 #fff; }
+.quiz-option { border-color: #e3d5e9; box-shadow: inset 0 1px 0 #fff; background: #fffafdd9; }
+.quiz-option:hover:not([aria-disabled="true"]) { background: linear-gradient(120deg, #fff9fc, #f2e8f7); border-color: #c3a7d1; box-shadow: 0 4px 12px #98709b0b; }
+.quiz-option.is-correct { border-color: #af91b6; background: linear-gradient(110deg, #f1e5f5, #fcf3e7); box-shadow: 0 0 0 2px #e5d5e53d, inset 0 1px 0 #fff; animation: answer-settle .3s ease both; }
+.quiz-option.is-correct .quiz-option-letter { color: #94784e; background: #f8ebd6; }
+.quiz-option.is-wrong { border-color: #d4b4c8; background: #fbf0f4; }
+.quiz-answer-mark { color: #998059; }
+.quiz-preview-label, .quiz-instructions, .pin-instructions, .book-instructions { color: #8b7199; }
+.quiz-view { animation-duration: .35s; }
+
+/* The objects keep their own materials and physical motion. */
+.book-hardback { box-shadow: 0 7px 0 #ad8ab9, 0 10px 0 #8f709d, 0 26px 40px #67487326, 0 4px 8px #67487320; }
+.book-cover-button:not(:disabled) { transition: filter .3s; }
+.book-cover-button:hover:not(:disabled) { filter: brightness(1.025); }
+.book-edge::after { content: ''; position: absolute; top: 4%; bottom: 4%; width: 14px; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.edge-next::after { right: 0; background: linear-gradient(270deg, #d5b6894d, transparent); }
+.edge-previous::after { left: 0; background: linear-gradient(90deg, #d5b6894d, transparent); }
+.book-edge:hover:not(:disabled)::after, .book-edge:focus-visible::after { opacity: 1; }
+.book-edge:hover:not(:disabled) span { opacity: .85; }
+.book-control:hover:not(:disabled), .letter-control:hover:not(:disabled), .cassette-small-control:hover:not(:disabled) { border-color: #c8abd5; box-shadow: 0 3px 10px #9070980d; }
+.book-open { background: linear-gradient(120deg, #9c7aaf, #846196); border-color: #9570a6; }
+.book-photo-mount { box-shadow: 0 2px 6px #71604d15, inset 0 1px 0 #fff; }
+.cassette-tape { filter: drop-shadow(0 7px 10px #8e6e9610); }
+.cassette-inspect { background: #fffc; border-color: #dbc8e4; box-shadow: 0 3px 9px #91709a08; }
+.cassette-inspect[aria-expanded="true"] { background: #f0e2f3; border-color: #c4a5d2; }
+.cassette-note { background: linear-gradient(130deg, #fffdf5, #fff5eb); box-shadow: 0 13px 35px #75538426, inset 0 1px 0 #fff; }
+.cassette-small-control { background: #fffb; }
+.letter-envelope-back { box-shadow: 0 17px 35px #7755841f, 0 3px 0 #bea0cc; }
+.envelope-open-target:focus-visible { outline-offset: 8px; }
+.envelope-open-target:hover .letter-wax-seal { filter: brightness(1.04); }
+.letter-pull-tab:hover { color: #866394; }
+.letter-pull-tab:hover > span { transform: translateY(-2px); }
+.letter-pull-tab > span { transition: transform .2s; }
+.letter-stationery { background-color: #fffdf7; }
+.machine-marquee { color: #89637d; }
+.machine-spin:hover:not(:disabled) { filter: brightness(1.025); }
+.machine-lever:focus-visible { outline-offset: 5px; border-radius: 12px; }
+.machine-sound { font-size: 11px; }
+.machine-prize > p { color: #9b819c; font-size: 8px; }
+.gift-presentation-photo { box-shadow: inset 0 2px 1px #fff, 0 20px 45px #a67b9b1b; }
+.gift-photo-placeholder { background: radial-gradient(ellipse at 50% 35%, #fffdf7, #f5e9ef); }
+.gift-small-label { color: #9a8057; }
+.gift-claim-confirmation { background: linear-gradient(120deg, #fffdf6d9, #fcf3e9a1); box-shadow: inset 0 1px 0 #fff; }
+.finale-card { box-shadow: 0 16px 45px #9a72961a, 4px 5px 0 -1px #f7ebef, 4px 5px 0 0 #e7d8df; }
+.finale-placeholder-label { color: #9b8195; font-size: 8px; }
+.finale-restart-dialog { background: linear-gradient(125deg, #fffdf7, #fff5f2); }
+
+@keyframes gift-scene-arrive { from { opacity: .3; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes answer-settle { from { box-shadow: 0 0 0 0 #dbc6df00; } to { box-shadow: 0 0 0 2px #e5d5e53d, inset 0 1px 0 #fff; } }
+.motion-paused .screen, .motion-paused .quiz-option.is-correct { animation: none !important; }
+.motion-paused button, .motion-paused .primary-button > span, .motion-paused .book-edge::after, .motion-paused .envelope-illustration, .motion-paused .letter-pull-tab > span { transition: none !important; }
+@media (prefers-reduced-motion: reduce) { .screen:not(.final-celebration), .quiz-option.is-correct { animation: none !important; } }
+@media (max-height: 800px) and (min-width: 801px) { .welcome-screen::before { height: 535px; } .welcome-screen .primary-button { padding-block: 16px; } }

@@ -49,3 +49,8 @@
 @media (prefers-reduced-motion: reduce) { .quiz-celebration { display: none; } }
 @media (max-height: 800px) and (min-width: 801px) { .quiz-card { padding: 24px; } .quiz-option { min-height: 51px; padding: 8px 12px; } .quiz-progress-row { margin-bottom: 18px; } .quiz-question { font-size: 23px; margin-bottom: 18px; } .quiz-completion { min-height: 450px; } }
 @media (max-width: 800px) { .quiz-screen { grid-template-columns: 1fr; max-width: 550px; gap: 30px; } }
+@media (max-height: 800px) and (min-width: 801px) {
+  .quiz-active .site-header { padding-top: 18px; padding-bottom: 14px; }
+  .quiz-active .site-footer { padding-top: 14px; padding-bottom: 18px; }
+  .quiz-active main { padding-top: 8px; padding-bottom: 18px; }
+}

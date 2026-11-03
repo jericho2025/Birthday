@@ -8,7 +8,7 @@ const celebrationPieces = Array.from({ length: 24 }, (_, index) => ({
   left: `${(index * 37 + 7) % 100}%`, delay: `${(index % 6) * 0.06}s`, rotation: `${index * 47}deg`,
 }))
 
-export function BirthdayQuiz({ content, questions, headingRef, onComplete, onBack }) {
+export function BirthdayQuiz({ content, questions, headingRef, onComplete, onBack, onReaction }) {
   const [quiz, dispatch] = useReducer((state, action) => reduceQuiz(state, action, questions), initialQuizState)
   const questionHeadingRef = useRef(null)
   const previousView = useRef('0')
@@ -17,6 +17,15 @@ export function BirthdayQuiz({ content, questions, headingRef, onComplete, onBac
   const question = configured ? questions[quiz.index] : null
   const correct = quiz.status === 'correct'
   const feedback = correct ? content.correctMessage : quiz.status === 'wrong' ? content.wrongMessage : content.idleMessage
+  const previousReaction = useRef(initialQuizState)
+
+  useEffect(() => {
+    if (previousReaction.current === quiz) return
+    previousReaction.current = quiz
+    if (quiz.complete) onReaction?.('quizComplete')
+    else if (quiz.status === 'correct') onReaction?.('quizCorrect')
+    else if (quiz.status === 'wrong') onReaction?.('quizWrong')
+  }, [quiz, onReaction])
 
   useEffect(() => {
     if (previousView.current !== view) questionHeadingRef.current?.focus()

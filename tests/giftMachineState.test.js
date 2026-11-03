@@ -106,12 +106,14 @@ test('fake completion, skipped histories, and celebration events during a spin a
   assert.equal(reduce(createMachineState(config), { type: 'skip' }).finishedSpins, 0)
 })
 
-test('journey integration preserves PIN and letter completion, and gates only the mystery placeholder', () => {
+test('journey integration preserves earlier content and gates the gift reveal', () => {
   assert.equal(birthdayContent.pinChallenge.pin, '1120')
   assert.equal(birthdayContent.quizQuestions.length, 5)
   assert.equal(birthdayContent.book.pages.length, 12)
   assert.ok(birthdayContent.letter.paragraphs.length)
-  assert.match(birthdayContent.mysteryGiftPlaceholder.label, /Coming in Phase 9/)
+  assert.equal(birthdayContent.welcome.recipient, 'My Love')
+  assert.equal(birthdayContent.gift.photo.src, '')
+  assert.equal(birthdayContent.finale.recipient, 'My Love!')
   assert.equal(machineNextStage('machine', jackpot(), config), 'machine')
   assert.equal(machineNextStage('machine', completed(), config), 'reveal')
   for (const stage of ['welcome', 'pin', 'puzzle', 'quiz', 'album', 'cassette', 'letter']) assert.equal(machineNextStage(stage, completed(), config), stage)
@@ -228,6 +230,22 @@ class FakeAudioContext {
   createOscillator() { const source = { frequency: { setValueAtTime() {}, exponentialRampToValueAtTime() {} }, connect() { return this }, disconnect() {}, start() {}, stops: 0, stop() { this.stops++ } }; this.sources.push(source); return source }
   createGain() { return { gain: { setValueAtTime() {}, linearRampToValueAtTime() {}, exponentialRampToValueAtTime() {} }, connect() { return this }, disconnect() {} } }
 }
+
+test('stopping a spin or muting invalidates delayed audio resume work', async () => {
+  let context
+  class Context extends FakeAudioContext { constructor() { super(); context = this } }
+  const sound = createMachineSound(Context, 0.04)
+  sound.begin(3); sound.stopSpin()
+  await Promise.resolve()
+  assert.equal(context.sources.length, 0)
+  sound.begin(3); sound.setMuted(true); sound.setMuted(false)
+  await Promise.resolve()
+  assert.equal(context.sources.length, 0)
+  sound.begin(3); sound.begin(3)
+  await Promise.resolve()
+  assert.equal(context.sources.length, 1)
+  sound.dispose()
+})
 
 test('synthesized audio cleanup stops voices, closes context, and ignores pending resume work', async () => {
   let context

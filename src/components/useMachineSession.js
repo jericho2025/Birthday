@@ -6,8 +6,9 @@ function restore(config) {
 }
 
 // Owned by App, not the stage: a component remount cannot reset the spin budget.
-export function useMachineSession(config) {
-  const [state, dispatch] = useReducer((current, action) => reduceGiftMachine(current, action, config), config, restore)
+export function useMachineSession(config, freshSession = false) {
+  // Only a confirmed full-adventure restart bypasses the saved spin budget.
+  const [state, dispatch] = useReducer((current, action) => reduceGiftMachine(current, action, config), config, (initialConfig) => freshSession ? createMachineState(initialConfig) : restore(initialConfig))
   useEffect(() => {
     try { saveMachineState(window.sessionStorage, state, config) } catch { /* Some browsers block session storage. */ }
   }, [state, config])

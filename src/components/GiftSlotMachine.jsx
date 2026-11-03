@@ -13,6 +13,7 @@ export function GiftSlotMachine({ content, state, dispatch, headingRef, motionPa
   const reduced = reducedMotion || motionPaused
   const { muted, toggleMute, begin, stopSpin, stopCue, winCue } = useMachineSound(content.settings)
   const requestedRef = useRef(false)
+  const celebratedRef = useRef(null)
   const continueRef = useRef(null)
   const configured = isValidMachineConfig(content)
   const spinning = state.phase === 'spinning'
@@ -31,7 +32,10 @@ export function GiftSlotMachine({ content, state, dispatch, headingRef, motionPa
     if (state.phase === 'ready') requestedRef.current = false
     if (!spinning) stopSpin()
     if (!celebrating) return
-    winCue()
+    if (celebratedRef.current !== state.transaction) {
+      celebratedRef.current = state.transaction
+      winCue()
+    }
     const timeout = window.setTimeout(() => dispatch({ type: 'celebrationFinished', transaction: state.transaction }), reduced ? 0 : content.settings.celebrationMs)
     return () => window.clearTimeout(timeout)
   }, [state.phase, state.transaction, spinning, celebrating, reduced, content.settings.celebrationMs, dispatch, stopSpin, winCue])

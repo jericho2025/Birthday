@@ -4,6 +4,7 @@ export function createMachineSound(AudioContextClass, volume) {
   const voices = new Set()
   let disposed = false
   let muted = false
+  let spinRevision = 0
   const level = Number.isFinite(volume) ? Math.max(0, Math.min(0.15, volume)) : 0.04
 
   function stopVoice(voice) {
@@ -28,18 +29,19 @@ export function createMachineSound(AudioContextClass, volume) {
     source.start(now)
     source.stop(now + seconds)
   }
-  function stopSpin() { for (const voice of [...voices]) if (voice.group === 'spin') stopVoice(voice) }
+  function stopSpin() { spinRevision++; for (const voice of [...voices]) if (voice.group === 'spin') stopVoice(voice) }
   function stopAll() { for (const voice of [...voices]) stopVoice(voice) }
   return {
     begin(seconds) {
       if (disposed || muted) return
       stopSpin()
-      context.resume().then(() => { if (!disposed && !muted) tone(115, seconds, 0, 'spin') }).catch(() => {})
+      const revision = spinRevision
+      context.resume().then(() => { if (!disposed && !muted && revision === spinRevision) tone(115, seconds, 0, 'spin') }).catch(() => {})
     },
     stopSpin,
     stopCue(index) { tone(520 + index * 110, 0.1) },
     winCue() { [784, 988, 1175].forEach((frequency, index) => tone(frequency, 0.24, index * 0.12)) },
-    setMuted(value) { muted = value; if (muted) stopAll() },
+    setMuted(value) { muted = value; if (muted) { spinRevision++; stopAll() } },
     dispose() { if (disposed) return; disposed = true; stopAll(); context.close().catch(() => {}) },
   }
 }

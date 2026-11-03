@@ -17,9 +17,9 @@ npm run build
 npm run preview
 ```
 
-PIN, puzzle, quiz, book, cassette, and letter regression checks: `node --test tests/*.test.js`.
+All automated regression checks, including the gift machine, gift reveal, and finale: `node --test tests/*.test.js`.
 
-## Phases 1–7
+## Phases 1–10
 
 - Full-screen pastel welcome with CSS balloons, sparkles, confetti, and an envelope illustration.
 - **Open Your Surprise** starts the Secret PIN Challenge. Use the clickable keypad or physical number keys; Backspace/Delete removes a digit and Escape clears the attempt. Four digits automatically validate.
@@ -38,13 +38,14 @@ PIN, puzzle, quiz, book, cassette, and letter regression checks: `node --test te
 - With no configured audio, **Add your song here** is shown and playback controls are disabled. **Inspect Cassette** opens an editable note and unlocks Continue, keeping the journey completable during development. With audio present, an intentional Play that reaches actual playback also unlocks Continue; listening to the whole track is unnecessary. Loading errors offer Retry audio and leave inspection available.
 - The Birthday Letter starts inside a sealed pastel envelope. Click the seal/envelope or **Open Envelope** to animate the 3D flap and raise the paper edge. Then click the paper, drag it upward, or use **Read Letter** to take out the stationery. Merely opening the envelope does not unlock Continue.
 - Short or cancelled paper drags return to the offered paper edge. **Close Letter** tucks the paper back and seals the envelope. **Replay** closes and reopens it to the paper edge, ready to pull out again. Once the paper has fully displayed, completion is retained across Close/Replay; Continue locks during animation or dragging.
-- Progress dots remain noninteractive. The puzzle requires a successful PIN; the quiz requires puzzle completion and Continue; the album requires all five correct quiz answers and Continue; the cassette requires book completion and Continue; the letter requires cassette inspection or successful intentional playback and Continue; the Virtual Gift Machine placeholder requires opening and displaying the letter and Continue. No later chapter or final gift is implemented. Reload or **Back to the beginning** starts the journey again.
+- Progress dots remain noninteractive. The puzzle requires a successful PIN; the quiz requires puzzle completion and Continue; the album requires all five correct quiz answers and Continue; the cassette requires book completion and Continue; the letter requires cassette inspection or successful intentional playback and Continue; the Virtual Gift Machine requires opening and displaying the letter and Continue. The machine jackpot and its completed celebration unlock the gift reveal. Opening and claiming the gift unlock the Final Birthday Celebration.
+- Reload or **Back to the beginning** returns to Welcome. The machine's spin budget and results persist in this tab's session storage; going through earlier chapters again does not grant additional spins. Gift opening/claim progress stays in memory across stage navigation, and resets on reload. No personal content is stored.
 
 ## Customization and structure
 
 Edit `src/config/birthdayContent.js` for the recipient placeholder, date label, screen copy, planned journey, and quiz questions. Empty media fields are reserved for later phases. `[Your name]` is intentionally a placeholder.
 
-`src/components/` contains the welcome screen, next-stage placeholder, shared shell, and decorative backdrop, with adjacent CSS. `src/index.css` holds base typography and tokens; `src/App.css` holds the application background. `src/App.jsx` owns the current flow state. The flow resets on reload.
+`src/components/` contains the journey screens, shared shell, and decorative backdrop, with adjacent CSS. `src/index.css` holds base typography and tokens; `src/App.css` holds the application background. `src/App.jsx` owns the current flow state. Reload returns to Welcome while retaining the machine's per-tab spin record.
 
 `TilePuzzle.jsx` renders the puzzle; `puzzleState.js` holds shared click/drag swap rules, shuffle, restart, and completion detection. Configure tile colors and copy under `puzzle` in `birthdayContent.js`. To use a photo later, put an approved local square image in `public/`, set `puzzle.media.mode` to `'photo'`, set `photoSrc` to its local path (for example `/puzzle-photo.jpg`), and supply `photoDescription`. The same nine pieces crop the image into a 3×3 arrangement without changing the game logic. `showNumbers` controls the photo's visible number badges; color mode always shows numbers. No photo is currently loaded or required.
 
@@ -86,6 +87,34 @@ The letter supports mouse clicks and pointer dragging, plus Tab and Enter/Space 
 
 Letter `settings.durations` (milliseconds), `dragDistancePx`, and `dragCommitThreshold` (0–1) control timing and pull sensitivity. Reduced-motion preferences and **Pause animations** settle timed phases immediately while preserving the separate intentional paper-pull step. Timers are cleared on phase changes or leaving the screen. The automated letter tests cover opening, closing, replay, drag cancellation, bounds, stale events, completion, and placeholder configuration.
 
-The remaining journey follows `AGENTS.md`: gift machine, present opening, and closing celebration. Implement these one phase at a time; the progress dots are indicators, not links to unfinished screens.
+## Gift machine (Phase 8)
+
+`src/config/birthdayMachine.js` configures the copy, symbols, three scripted outcomes, staggered reel durations, celebration duration, and initial sound setting. Exactly three spins are available: two distinct near misses, followed by three gift symbols. There are no random prizes. Click **SPIN**, click the lever, or press S while focus is within the machine. Held keys, rapid clicks, stale reel callbacks, and duplicate completion events cannot spend additional spins or skip the celebration. Continue appears only when all three reels and the final celebration finish.
+
+`giftMachineState.js` validates the entire outcome history and session record. `useMachineSession.js` owns state in App, so leaving a spinning machine cannot reset the budget. Returning resumes its unfinished reels with the same transaction and previously stopped symbols; an interrupted jackpot finishes its celebration before unlocking Continue. Browser session storage is optional: if unavailable, in-memory state remains functional. Changing the script version invalidates old saved results.
+
+Machine sounds start muted and use quiet local Web Audio effects after an intentional unmuted spin. Mute cancels active and pending audio; leaving the machine disposes its audio context. Paused animations and reduced motion settle the reels in order without rolling or confetti, preserving all three intentional spins. No dependencies or remote audio are required.
+
+## Mystery gift (Phase 9)
+
+The sealed pink box has satin ribbon, a shaded front and side, a dimensional lid, ambient sparkles, and a soft ground shadow. **Open Your Gift** starts three separate timed steps: ribbon loosening, lid lifting, and light building inside the box. The gift presentation, photo, and reveal copy are not mounted until all three steps complete. Repeated clicks cannot accelerate this sequence. Paused animations and reduced motion settle each step without movement and still require intentional opening and claiming.
+
+Edit `src/config/birthdayGift.js` for the watch presentation, all reveal copy, optional message, claim confirmation, and phase durations. `photo.src` is empty by default, showing a clearly labeled photo placeholder. Put the actual approved image in `public/images/birthday-gift/`, then set `photo.src` to `/images/birthday-gift/watch.jpg` and update `photo.alt`. Only root-relative local paths are accepted; missing or failed images show the placeholder. Images use `object-fit: contain` to preserve the full photograph. No product photo is fabricated or bundled.
+
+**Claim Your Gift** shows an inline confirmation that the real gift will be given personally. It opens no forms, external sites, accounts, or payment flows. Only claiming enables Continue to the **Final Birthday Celebration**. Its Back button revisits the claimed gift. **Back to the machine** retains the opened/claimed gift and the completed three-spin budget. Leaving during an opening cancels its timer; returning resumes the current step rather than skipping it.
+
+`GiftReveal.jsx` and its adjacent CSS render the box and presentation; `giftRevealState.js` guards the sequence with revision-bound callbacks. App owns gift state and independently verifies both machine completion and gift claiming before showing the finale. Native buttons support Tab and Enter/Space. Focus moves to the gift presentation after opening and to the confirmation after claiming. These frontend journey guards prevent ordinary navigation skips, and are not security against developer tools.
+
+## Final Birthday Celebration (Phase 10)
+
+`FinalBirthdayCelebration.jsx` and its adjacent CSS present a staged **Happy Birthday, My Love!** greeting, a locally drawn SVG cake with glowing candles, and a cream stationery card with handwritten-style system fonts. The existing pastel balloons surround soft gold lights, floating hearts, sparkles, and a finite confetti shower. No audio, music, photos, remote fonts, or dependencies are added.
+
+Edit `src/config/birthdayFinale.js` for every finale text label, birthday wish, card heading/greeting/paragraphs/signature, closing note, cake description, replay/status labels, and restart confirmation. The supplied message is clearly labeled sample copy, ready for a separate personalization phase. `settings.durations` controls the greeting, cake entrance, and message entrance in milliseconds. Longer card content scrolls within the stationery rather than pushing controls outside the desktop layout.
+
+**Replay Celebration** replays only the finale and briefly locks during the three entrance steps. It does not reset the machine, gift, or journey. **Back to your gift** returns to the claimed presentation; Continue returns to a fresh, clean finale entrance. Leaving clears pending timers, and revision IDs reject stale or duplicate callbacks. No sound is triggered on entry, replay, or remount. Reduced motion and **Pause animations** display the complete greeting/card immediately, suppress confetti, and settle the sequence asynchronously so replay remains available.
+
+**Restart Birthday Adventure** first opens a native modal confirmation. Keyboard focus starts on **Keep this moment**; Tab stays within the dialog, and Escape cancels. Cancelling preserves all progress and returns focus to the restart button. Only explicit confirmation starts a fresh adventure, resets the gift and three-spin budget, and focuses Welcome. The machine's new initial record replaces only its own session-storage entry; unrelated storage is untouched. This differs from the earlier **Back to the beginning** navigation, which continues to retain the machine's spin record.
+
+`finaleState.js` contains the independently checked finale access/back/restart guards, entrance/replay reducer, motion-aware timing, and cancellable timer scheduler. Automated tests cover genuine jackpot/claim prerequisites, stale events, replay spam, navigation retention, restart confirmation/cancellation, reduced motion, and cleanup. The progress dots remain indicators, not links. All ten phases are implemented with public-safe placeholders; private media and final personal copy remain for the content-personalization and final QA phase.
 
 This repository is public. Do not commit private photos, audio, personal messages, PINs, or gift details without explicit direction. The client-side PIN is a game mechanic, not security.

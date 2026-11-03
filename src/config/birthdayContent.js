@@ -1,5 +1,7 @@
 import { birthdayBook } from './birthdayBook.js'
 import { birthdayMachine } from './birthdayMachine.js'
+import { birthdayGift } from './birthdayGift.js'
+import { birthdayFinale } from './birthdayFinale.js'
 
 // Public-safe content only. Keep private media, messages, PINs and gifts out of this file.
 export const birthdayContent = {
@@ -161,16 +163,8 @@ export const birthdayContent = {
     backAction: 'Back to the beginning',
   },
   machine: birthdayMachine,
-  mysteryGiftPlaceholder: {
-    eyebrow: 'CHAPTER 08 · STILL A LITTLE MYSTERY',
-    title: 'A little surprise,',
-    titleAccent: 'still under wraps.',
-    description: 'You completed all three birthday spins.',
-    label: 'Mystery Gift · Coming in Phase 9',
-    note: 'A placeholder for the next chapter. The surprise remains wrapped for now.',
-    backAction: 'Back to the machine',
-  },
-  // Planned flow; chapters after the gift machine are intentionally unimplemented.
+  gift: birthdayGift,
+  finale: birthdayFinale,
   journey: [
     { id: 'welcome', label: 'Welcome' },
     { id: 'pin', label: 'PIN challenge' },

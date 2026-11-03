@@ -23,8 +23,6 @@ h1 em { display: block; position: relative; width: fit-content; margin: 5px auto
 .chapter-symbol { font: 70px var(--serif); color: #aa8aba; line-height: 1; }
 .placeholder-screen h1 { font-size: clamp(44px, 4.5vw, 65px); letter-spacing: -2px; }
 .placeholder-panel { max-width: 430px; margin: 0 auto 20px; padding: 24px; border: 1px solid #e7dcec; border-radius: 14px; background: #fff8; }
-.pin-preview { display: flex; justify-content: center; gap: 10px; }
-.pin-preview span { display: grid; place-items: center; width: 44px; height: 49px; background: #f6f0f8; border: 1px solid #dfd3e6; border-radius: 8px; font-size: 28px; color: #a58ab4; }
 .placeholder-panel p { font-size: 12px; margin: 18px 0 8px; font-weight: 600; }
 .placeholder-panel small { font-size: 11px; line-height: 1.7; color: var(--muted); }
 .text-button { border: 0; border-radius: 5px; padding: 10px; display: inline-flex; gap: 12px; align-items: center; color: #7a5a92; background: transparent; font-size: 12px; }

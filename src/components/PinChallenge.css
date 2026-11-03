@@ -1,0 +1,52 @@
+.pin-screen { max-width: 1020px; display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: 56px; }
+.pin-intro { text-align: left; }
+.pin-intro h1 em { margin-left: 0; }
+.pin-intro .pin-lock { margin-left: 0; margin-bottom: 28px; }
+.pin-intro .text-button { margin: 28px 0 0 -10px; }
+.pin-screen h1 { font-size: clamp(38px, 3.7vw, 56px); letter-spacing: -1.8px; }
+.pin-screen .eyebrow { margin: 16px 0; }
+.pin-question { font-family: var(--serif); font-size: 19px; line-height: 1.5; margin: 22px 0 18px; }
+.pin-lock { position: relative; width: 42px; height: 49px; margin: 0 auto; }
+.lock-shackle { position: absolute; top: 0; left: 9px; width: 24px; height: 29px; border: 3px solid #b798c6; border-bottom: 0; border-radius: 15px 15px 0 0; transform-origin: 90% 65%; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+.lock-body { position: absolute; bottom: 0; left: 0; display: grid; place-items: center; width: 42px; height: 32px; background: linear-gradient(135deg, #ecdbf3, #f8e4ee); border: 1px solid #d9c1e1; border-radius: 9px; color: #916ca6; font: 22px var(--serif); box-shadow: 0 5px 15px #9970ac15; }
+.pin-unlocked .lock-shackle { transform: translateY(-6px) rotate(-32deg); }
+.pin-unlocked .pin-lock { animation: unlock-bloom .8s ease both; }
+.pin-card { max-width: 330px; padding: 24px 25px 18px; margin: 0 auto; border: 1px solid #e3d6e9; border-radius: 21px; background: linear-gradient(150deg, #ffffffc9, #fff7fbaa); box-shadow: 0 18px 50px #8461990c, inset 0 1px 0 white; }
+.pin-indicators { display: flex; justify-content: center; gap: 13px; }
+.pin-indicators > span { display: grid; place-items: center; width: 43px; height: 48px; border: 1px solid #dfd0e8; border-radius: 11px; background: #f8f2fb; transition: background .2s, border-color .2s; }
+.pin-indicators i { width: 8px; height: 8px; border: 1px solid #cdb8db; border-radius: 50%; transition: transform .2s, background .2s; }
+.pin-indicators .is-filled { border-color: #ad8ac0; background: #eee2f4; }
+.pin-indicators .is-filled i { background: #9570aa; border-color: #9570aa; transform: scale(1.1); }
+.pin-feedback { display: grid; align-items: center; min-height: 42px; margin: 10px 0 12px; color: #7d688b; font-size: 11px; line-height: 1.65; }
+.pin-wrong .pin-feedback { color: #a05d7e; }
+.pin-wrong .pin-indicators { animation: pin-shake .4s ease; }
+.pin-wrong .pin-indicators > span { border-color: #d7a8bc; background: #fbecf2; }
+.pin-unlocked .pin-indicators > span { background: #e8dcee; border-color: #af8cc2; }
+.pin-unlocked .pin-feedback { color: #705084; }
+.pin-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+.pin-key { min-height: 46px; border: 1px solid #e5d9ed; border-radius: 11px; background: linear-gradient(135deg, #faf5fd, #f6eaf3); color: #6b507f; font-size: 20px; box-shadow: 0 2px 3px #8a629a08; transition: transform .15s, background .2s, box-shadow .2s; }
+.pin-key:hover:not(:disabled) { transform: translateY(-2px); background: #eddef5; box-shadow: 0 5px 12px #9970ac1f; }
+.pin-key:active:not(:disabled) { transform: scale(.94); background: #e3cdeb; }
+.pin-key:disabled { cursor: default; opacity: .5; }
+.pin-key-secondary { font-size: 19px; background: #fffbfd; color: #9a7ca7; }
+.pin-instructions { font-size: 10px; line-height: 1.7; color: var(--muted); margin: 16px 0 0; }
+.pin-hint { font-size: 10px; color: var(--muted); line-height: 1.7; max-width: 350px; margin: 14px auto 8px; }
+.motion-paused .pin-screen *, .motion-paused .pin-screen *::before, .motion-paused .pin-screen *::after { animation: none !important; transition: none; }
+@keyframes pin-shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+@keyframes unlock-bloom { 0%, 100% { scale: 1; } 50% { scale: 1.12; filter: drop-shadow(0 0 12px #c3a0dc88); } }
+@media (max-height: 850px) and (min-width: 801px) {
+  .pin-screen .pin-lock { scale: .85; height: 43px; }
+  .pin-screen .eyebrow { margin: 10px 0; }
+  .pin-screen h1 { font-size: 43px; }
+  .pin-question { margin: 15px 0; font-size: 17px; }
+  .pin-card { padding: 18px 23px 14px; }
+  .pin-key { min-height: 39px; }
+  .pin-indicators > span { height: 39px; }
+  .pin-feedback { min-height: 36px; margin: 7px 0; }
+}
+@media (max-width: 800px) {
+  .pin-screen { grid-template-columns: 1fr; gap: 16px; }
+  .pin-intro { text-align: center; }
+  .pin-intro .pin-lock, .pin-intro h1 em { margin-left: auto; }
+  .pin-intro .text-button { margin-top: 14px; }
+}
